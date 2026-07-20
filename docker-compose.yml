@@ -22,6 +22,10 @@ services:
       # Must match TCPSERVER_USER/TCPSERVER_PWD in /etc/piGarden.conf on the Pi
       PIGARDEN_SOCKET_CLIENT_USER: "${PIGARDEN_SOCKET_CLIENT_USER:-}"
       PIGARDEN_SOCKET_CLIENT_PWD: "${PIGARDEN_SOCKET_CLIENT_PWD:-}"
+      # Keep the connect timeout short: if the Pi is unreachable every page
+      # would otherwise block on it (a page makes more than one status call).
+      PIGARDEN_SOCKET_CLIENT_CONNECT_TIMEOUT: "${PIGARDEN_SOCKET_CLIENT_CONNECT_TIMEOUT:-5}"
+      PIGARDEN_SOCKET_CLIENT_READ_TIMEOUT: "${PIGARDEN_SOCKET_CLIENT_READ_TIMEOUT:-15}"
 
       # ---- Locale / timezone ----
       PIGARDEN_TZ: "${TZ:-Europe/Rome}"

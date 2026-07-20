@@ -18,6 +18,16 @@ class PiGardenSocketClient {
     protected $socket;
     protected $prevRequest;
 
+    /**
+     * "host:port" that proved unreachable during this request. A single page
+     * builds the status more than once (controller + the zones in the sidebar);
+     * without this, each of those calls would pay the connect timeout again.
+     * Keyed by target so a config change is retried rather than stuck.
+     *
+     * @var string|null
+     */
+    protected static $unreachableTarget = null;
+
     public function __construct()
     {
         $this->ip = config('pigarden.socket_client_ip');
@@ -30,13 +40,23 @@ class PiGardenSocketClient {
      */
     protected  function open()
     {
-        $connection = "tcp://".$this->ip.":".$this->port;
-        $this->socket = stream_socket_client($connection, $errno, $errstr, 30);
+        $target = $this->ip.':'.$this->port;
+
+        if (static::$unreachableTarget === $target) {
+            throw new Exception("piGarden is unreachable at {$target}");
+        }
+
+        $connectTimeout = (float) config('pigarden.socket_client_connect_timeout', 5);
+
+        $this->socket = @stream_socket_client("tcp://".$target, $errno, $errstr, $connectTimeout);
         if (!$this->socket) {
+            // Remember it for the rest of the request so sibling calls fail instantly
+            static::$unreachableTarget = $target;
             throw new Exception($errstr, $errno);
         }
+
         // Timeout on read/write: without it a stalled socket server hangs the web request forever
-        stream_set_timeout($this->socket, 30);
+        stream_set_timeout($this->socket, (int) config('pigarden.socket_client_read_timeout', 15));
     }
 
     /**

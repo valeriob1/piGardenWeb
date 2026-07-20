@@ -4,6 +4,15 @@ return [
     'socket_client_port' => env('PIGARDEN_SOCKET_CLIENT_PORT', 8084),
     'socket_client_user' => env('PIGARDEN_SOCKET_CLIENT_USER', ''),
     'socket_client_pwd' => env('PIGARDEN_SOCKET_CLIENT_PWD', ''),
+
+    // Seconds to wait when opening the socket to piGarden. Keep it short: an
+    // unreachable Pi must fail fast, otherwise every page blocks on the TCP
+    // connect timeout (a page renders more than one status call).
+    'socket_client_connect_timeout' => env('PIGARDEN_SOCKET_CLIENT_CONNECT_TIMEOUT', 5),
+    // Seconds to wait for piGarden's reply once connected (building the status
+    // is a fork-heavy bash script on the Pi, so allow more than the connect).
+    'socket_client_read_timeout' => env('PIGARDEN_SOCKET_CLIENT_READ_TIMEOUT', 15),
+
     'tz' => env('PIGARDEN_TZ', 'Europe/Rome'),
 
     // Read via config() (not env()) in routes so it keeps working with `php artisan config:cache`
