@@ -1,7 +1,6 @@
 services:
   web:
     build: .
-    image: pigardenweb:latest
     container_name: pigardenweb
     restart: unless-stopped
     ports:
