@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\PiGardenSocketClient;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 /**
@@ -110,29 +111,25 @@ class PiGardenSocketClientTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider validZones
-     */
+    #[DataProvider('validZones')]
     public function testValidateZoneAcceptsSafeAliases($zone)
     {
         $this->assertSame($zone, $this->client->callValidateZone($zone));
     }
 
-    public function validZones()
+    public static function validZones()
     {
         return [['zona_1'], ['zona.1'], ['zona-1'], ['Zone1'], ['1']];
     }
 
-    /**
-     * @dataProvider injectionZones
-     */
+    #[DataProvider('injectionZones')]
     public function testValidateZoneRejectsInjection($zone)
     {
         $this->expectException(Exception::class);
         $this->client->callValidateZone($zone);
     }
 
-    public function injectionZones()
+    public static function injectionZones()
     {
         return [
             'space'      => ['zona 1'],
