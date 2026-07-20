@@ -3,40 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Log;
-use App\PiGardenSocketClient;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
-// VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\IconRequest as StoreRequest;
-use App\Http\Requests\IconRequest as UpdateRequest;
-use Backpack\CRUD\CrudPanel;
-use Prologue\Alerts\Facades\Alert;
-
 /**
- * Class IconCrudController
+ * Class LogCrudController
  * @package App\Http\Controllers\Admin
- * @property-read CrudPanel $crud
+ * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
 class LogCrudController extends CrudController
 {
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+
     public function setup()
     {
-        /*
-        |--------------------------------------------------------------------------
-        | CrudPanel Basic Information
-        |--------------------------------------------------------------------------
-        */
         $this->crud->setModel('App\Models\Log');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/log');
         $this->crud->setEntityNameStrings('log', 'logs');
+    }
 
-        $this->crud->denyAccess(['create', 'update']);
-
-        /*
-        |--------------------------------------------------------------------------
-        | CrudPanel Configuration
-        |--------------------------------------------------------------------------
-        */
+    protected function setupListOperation()
+    {
         $this->crud->addClause('orderBy', 'datetime_log', 'desc');
 
         $this->crud->enableBulkActions();

@@ -12,8 +12,8 @@ Route::group([
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
 
-    CRUD::resource('icon', 'IconCrudController');
-    CRUD::resource('log', 'LogCrudController');
+    Route::crud('icon', 'IconCrudController');
+    Route::crud('log', 'LogCrudController');
 
 }); // this should be the absolute last line of this file
 
