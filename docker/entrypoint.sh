@@ -36,6 +36,9 @@ fi
 # (the app has closure routes, which Laravel can't route:cache) ---
 php artisan config:clear >/dev/null 2>&1 || true
 php artisan migrate --force || true
+# Seed the permission rows the admin UI checks (idempotent). Without them
+# Spatie throws PermissionDoesNotExist and the dashboard 500s on a fresh DB.
+php artisan db:seed --class=PermissionsSeeder --force || true
 php artisan storage:link 2>/dev/null || true
 php artisan config:cache || true
 php artisan view:cache || true

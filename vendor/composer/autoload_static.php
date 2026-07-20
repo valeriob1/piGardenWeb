@@ -157,6 +157,7 @@ class ComposerStaticInitab391babab44c4953b11fa841d0be88d
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Lexer\\' => 22,
             'Dflydev\\DotAccessData\\' => 22,
+            'Database\\Seeders\\' => 17,
         ),
         'C' =>
         array (
@@ -503,6 +504,10 @@ class ComposerStaticInitab391babab44c4953b11fa841d0be88d
         'Dflydev\\DotAccessData\\' =>
         array (
             0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
+        ),
+        'Database\\Seeders\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/database/seeders',
         ),
         'Cron\\' =>
         array (
@@ -931,6 +936,7 @@ class ComposerStaticInitab391babab44c4953b11fa841d0be88d
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
+        'Database\\Seeders\\PermissionsSeeder' => __DIR__ . '/../..' . '/database/seeders/PermissionsSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
