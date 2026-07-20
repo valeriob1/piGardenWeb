@@ -49,6 +49,41 @@ Edit **`docker-compose.yml`** and set at least:
 
 ## 3. Build & start (on the NAS)
 
+### Option A — Portainer (Stack from a Git repository)
+
+Because the compose uses `build: .`, it needs the whole project (Dockerfile +
+code + vendor), so the cleanest Portainer method is a **Git-repository stack**:
+
+1. **Push this repo** to your GitHub fork first (`git push origin master`) so
+   Portainer can reach it.
+2. In Portainer: **Stacks → Add stack → Build method: Repository**.
+   - **Repository URL:** `https://github.com/<you>/piGardenWeb`
+   - **Repository reference:** `refs/heads/master`
+   - **Compose path:** `docker-compose.yml`
+   - Private repo? Enable authentication and add a GitHub token.
+3. Scroll to **Environment variables** and add the ones you need to override
+   (they map to the `${...}` placeholders in the compose):
+
+   | Name | Example |
+   |---|---|
+   | `PIGARDEN_SOCKET_CLIENT_IP` | `192.168.1.50` (the Pi) |
+   | `PIGARDEN_SOCKET_CLIENT_PORT` | `8084` |
+   | `PIGARDEN_SOCKET_CLIENT_USER` | `pigarden` |
+   | `PIGARDEN_SOCKET_CLIENT_PWD` | your password |
+   | `APP_URL` | `http://<nas-ip>:8080` |
+   | `WEB_PORT` | `8080` |
+   | `TZ` | `Europe/Rome` |
+
+4. **Deploy the stack.** Portainer clones, builds the image and starts it. Use
+   **"Pull and redeploy"** later to update after you push new commits.
+
+> Tip: if you'd rather not build on the NAS or push to GitHub, build the image
+> elsewhere (`docker build -t pigardenweb .`), `docker save pigardenweb | gzip >
+> pigardenweb.tar.gz`, upload it in Portainer under **Images → Import**, then use
+> a stack whose service has `image: pigardenweb:latest` and **no** `build:` line.
+
+### Option B — Docker Compose CLI
+
 The NAS needs Docker + Docker Compose. From the project folder:
 
 ```sh
