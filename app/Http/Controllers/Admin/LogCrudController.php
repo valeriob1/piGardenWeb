@@ -34,66 +34,10 @@ class LogCrudController extends CrudController
 
         $this->crud->disableResponsiveTable();
 
-
-        // Filtro per data
-        $this->crud->addFilter([
-            'type' => 'date_range',
-            'name' => 'datetime_log',
-            'label'=> __("Log date time"),
-            'date_range_options' => [ // options sent to daterangepicker.js
-                'locale' => ['format' => 'DD/MM/YYYY HH:mm']
-            ]
-        ],
-            false,
-            function($value) { // if the filter is active, apply these constraints
-                $dates = json_decode($value);
-                $this->crud->addClause('where', 'datetime_log', '>=', $dates->from);
-                $this->crud->addClause('where', 'datetime_log', '<=', $dates->to.' 23:59:59');
-            }
-        );
-
-        $this->crud->addFilter([ // select2_multiple filter
-            'name' => 'status',
-            'type' => 'select2_multiple',
-            'label'=> __("Type"),
-        ], function() {
-            return Log::pluck('type', 'type')->toArray();
-        }, function($values) { // if the filter is active
-            $in = [];
-            foreach (json_decode($values) as $key => $value) {
-                $in[] = $value;
-            }
-            $this->crud->addClause('whereIn', 'type', $in);
-        });
-
-        $this->crud->addFilter([ // select2_multiple filter
-            'name' => 'level',
-            'type' => 'select2_multiple',
-            'label'=> __("Level"),
-        ], function() {
-            return Log::pluck('level', 'level')->toArray();
-        }, function($values) { // if the filter is active
-            $in = [];
-            foreach (json_decode($values) as $key => $value) {
-                $in[] = $value;
-            }
-            $this->crud->addClause('whereIn', 'level', $in);
-        });
-
-        $this->crud->addFilter([ // select2_multiple filter
-            'name' => 'client_ip',
-            'type' => 'select2_multiple',
-            'label'=> __("Client ip"),
-        ], function() {
-            return Log::pluck('client_ip', 'client_ip')->toArray();
-        }, function($values) { // if the filter is active
-            $in = [];
-            foreach (json_decode($values) as $key => $value) {
-                $in[] = $value;
-            }
-            $this->crud->addClause('whereIn', 'client_ip', $in);
-        });
-
+        // NOTE: filters (date_range + select2_multiple on type/level/client_ip) were
+        // removed here during the Backpack 4 -> 5 upgrade: Backpack 5 moved list
+        // filters to the paid "Pro" package. The log list still works (ordering,
+        // pagination); restore filters by adding backpack/pro or reimplementing them.
 
         $this->crud->addColumns([
             [
