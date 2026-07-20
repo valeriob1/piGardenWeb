@@ -1,0 +1,29 @@
+# Keep the build context small. vendor/ is intentionally NOT ignored
+# (it is committed and used directly — no composer step in the image).
+.git
+.gitattributes
+.github
+.idea
+.vscode
+
+# Dev-only / test tooling (not needed in a production image)
+tests
+phpunit.xml
+.phpunit.cache
+.phpunit.result.cache
+*.bak
+
+node_modules
+
+# Local environment & local database (provided at runtime instead)
+.env
+.env.*.local
+database/*.sqlite
+database/database.sqlite
+
+# Runtime artifacts (regenerated in the container)
+storage/logs/*.log
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*.php

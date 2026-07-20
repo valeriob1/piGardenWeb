@@ -1,0 +1,51 @@
+services:
+  web:
+    build: .
+    image: pigardenweb:latest
+    container_name: pigardenweb
+    restart: unless-stopped
+    ports:
+      # host:container — open http://<NAS-IP>:8080 in the browser
+      - "8080:80"
+    environment:
+      APP_NAME: piGardenWeb
+      APP_ENV: production
+      APP_DEBUG: "false"
+      # Set to the address you use to reach the panel (used for generated links)
+      APP_URL: "http://192.168.1.100:8080"
+      LOG_CHANNEL: stderr
+
+      # ---- Connection to piGarden running on the Raspberry Pi ----
+      # IP of the Raspberry Pi on your LAN, and the piGarden socket-server port.
+      PIGARDEN_SOCKET_CLIENT_IP: "192.168.1.50"
+      PIGARDEN_SOCKET_CLIENT_PORT: "8084"
+      # Strongly recommended once the socket is reachable over the LAN:
+      # set matching TCPSERVER_USER/TCPSERVER_PWD in /etc/piGarden.conf on the Pi.
+      PIGARDEN_SOCKET_CLIENT_USER: ""
+      PIGARDEN_SOCKET_CLIENT_PWD: ""
+
+      # ---- Locale / timezone ----
+      PIGARDEN_TZ: "Europe/Rome"
+      TIMEZONE: "Europe/Rome"
+      LOCALE: "it"
+
+      # ---- Database (SQLite, stored inside the persisted storage volume) ----
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/html/storage/app/database.sqlite
+
+      # ---- Backpack / registration ----
+      BACKPACK_REGISTRATION_OPEN: "false"
+
+      # Optional: set a fixed key with `docker compose run --rm web php artisan key:generate --show`
+      # If left empty, a key is generated on first start and persisted in the storage volume.
+      APP_KEY: ""
+
+    volumes:
+      # Persist database, logs, sessions and the generated app key
+      - pigardenweb_storage:/var/www/html/storage
+      # Persist uploaded zone icons (elfinder)
+      - pigardenweb_uploads:/var/www/html/public/uploads
+
+volumes:
+  pigardenweb_storage:
+  pigardenweb_uploads:
