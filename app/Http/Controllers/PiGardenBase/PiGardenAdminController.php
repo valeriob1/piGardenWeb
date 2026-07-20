@@ -41,7 +41,9 @@ class PiGardenAdminController extends PiGardenBaseController
         }
         $this->data['title'] = trans('pigarden.dashboard'); // set the page title
 
-        return view('backpack::dashboard', $this->data);
+        // App-owned dashboard view: Backpack 6 no longer resolves the old
+        // backpack:: override namespace (see resources/views/dashboard.blade.php)
+        return view('dashboard', $this->data);
     }
 
     /**

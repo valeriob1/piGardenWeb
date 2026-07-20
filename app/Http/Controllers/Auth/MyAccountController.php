@@ -18,7 +18,7 @@ class MyAccountController extends \Backpack\CRUD\app\Http\Controllers\MyAccountC
         $this->data['title'] = trans('backpack::base.my_account');
         $this->data['user'] = $this->guard()->user();
 
-        return view('backpack::auth.account.api_token', $this->data);
+        return view('auth.account.api_token', $this->data);
     }
 
     /**
