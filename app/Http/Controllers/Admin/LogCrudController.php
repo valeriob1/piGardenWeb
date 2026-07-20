@@ -26,8 +26,10 @@ class LogCrudController extends CrudController
     {
         $this->crud->addClause('orderBy', 'datetime_log', 'desc');
 
-        $this->crud->enableBulkActions();
-        $this->crud->addBulkDeleteButton();
+        // NOTE: bulk actions (multi-select + bulk delete) were removed during the
+        // Backpack 4 -> 6 upgrade: the bulk_delete button view lives in the paid
+        // "Pro" package, so enabling it aborts with "Button view and fallbacks do
+        // not exist". Restore by adding backpack/pro.
 
         $this->crud->addButtonFromView('top', 'table_refresh', 'table_refresh', 'beginning');
         $this->crud->removeButton('delete');
