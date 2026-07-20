@@ -1,46 +1,91 @@
-<!-- This file is used to store sidebar items, starting with Backpack\Base 0.9.0 -->
-<li><a href="{{ backpack_url('dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
+{{-- piGardenWeb sidebar.
+     Markup uses the CoreUI v2 classes the Backpack 6 theme expects
+     (nav-item / nav-link / nav-icon / nav-title / nav-dropdown); the old
+     AdminLTE markup (<li> + <li class="header"> + treeview) rendered as
+     unstyled links. Icons are FontAwesome 4 — see config/backpack/ui.php. --}}
 
-<li class="header">{{ strtoupper(trans('pigarden.zones')) }}</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('dashboard') }}">
+        <i class="nav-icon fa fa-dashboard"></i> {{ trans('backpack::base.dashboard') }}
+    </a>
+</li>
+
+<li class="nav-title">{{ strtoupper(trans('pigarden.zones')) }}</li>
 @forelse( \App\Zones::get() as $zone )
-    <li><a href="{{route('zone.edit', ['zone' => $zone->name])}}" class="link-zone-{{$zone->name}}"><i class="fa {{$zone->state == 0 ? 'fa-toggle-off' : 'fa-toggle-on'}}"></i> <span>{{$zone->name_stripped}}</span></a></li>
+    <li class="nav-item">
+        <a class="nav-link link-zone-{{$zone->name}}" href="{{route('zone.edit', ['zone' => $zone->name])}}">
+            <i class="nav-icon fa {{$zone->state == 0 ? 'fa-toggle-off' : 'fa-toggle-on'}}"></i> {{$zone->name_stripped}}
+        </a>
+    </li>
 @empty
-    <li><a><span><i>{{ trans('pigarden.zones_empty') }}</i></span></a></li>
+    <li class="nav-item">
+        <span class="nav-link disabled text-muted"><em>{{ trans('pigarden.zones_empty') }}</em></span>
+    </li>
 @endforelse
 
-<li class="header">LOG</li>
-<li><a href="{{backpack_url('log')}}"><i class="fa fa-list"></i> <span>{{ trans('pigarden.log.title') }}</span></a></li>
+<li class="nav-title">LOG</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{backpack_url('log')}}">
+        <i class="nav-icon fa fa-list"></i> {{ trans('pigarden.log.title') }}
+    </a>
+</li>
 
-<li class="header">{{ strtoupper(trans('pigarden.setup')) }}</li>
+<li class="nav-title">{{ strtoupper(trans('pigarden.setup')) }}</li>
 @if(backpack_user()->hasPermissionTo('manage setup', backpack_guard_name()))
-<li><a href="{{route('initial_setup.get')}}"><i class="fa fa-cogs"></i> <span>{{ trans('pigarden.initial_setup.title') }}</span></a></li>
-<li><a href="{{backpack_url('icon')}}"><i class="fa fa-picture-o"></i> <span>{{ trans('pigarden.setup_icons.title') }}</span></a></li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{route('initial_setup.get')}}">
+            <i class="nav-icon fa fa-cogs"></i> {{ trans('pigarden.initial_setup.title') }}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{backpack_url('icon')}}">
+            <i class="nav-icon fa fa-picture-o"></i> {{ trans('pigarden.setup_icons.title') }}
+        </a>
+    </li>
 @endif
 
-<li><a href="{{ backpack_url('elfinder') }}"><i class="fa fa-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('elfinder') }}">
+        <i class="nav-icon fa fa-files-o"></i> {{ trans('backpack::crud.file_manager') }}
+    </a>
+</li>
 
-<!-- Users, Roles Permissions -->
+{{-- Users, Roles, Permissions --}}
 @if(
     config('backpack.permissionmanager.allow_manage_user') ||
     backpack_user()->hasPermissionTo('manage users', backpack_guard_name())
 )
-<li class="treeview">
-    <a href="#"><i class="fa fa-group"></i> <span>Users, Roles, Perm</span> <i class="fa fa-angle-left pull-right"></i></a>
-    <ul class="treeview-menu">
-        <li><a href="{{ backpack_url('user') }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#">
+        <i class="nav-icon fa fa-group"></i> Users, Roles, Perm
+    </a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('user') }}">
+                <i class="nav-icon fa fa-user"></i> Users
+            </a>
+        </li>
         @if(
             config('backpack.permissionmanager.allow_role_create') ||
             config('backpack.permissionmanager.allow_role_update') ||
             config('backpack.permissionmanager.allow_role_delete')
         )
-        <li><a href="{{ backpack_url('role') }}"><i class="fa fa-group"></i> <span>Roles</span></a></li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('role') }}">
+                <i class="nav-icon fa fa-group"></i> Roles
+            </a>
+        </li>
         @endif
         @if(
             config('backpack.permissionmanager.allow_permission_create') ||
             config('backpack.permissionmanager.allow_permission_update') ||
             config('backpack.permissionmanager.allow_permission_delete')
         )
-        <li><a href="{{ backpack_url('permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('permission') }}">
+                <i class="nav-icon fa fa-key"></i> Permissions
+            </a>
+        </li>
         @endif
     </ul>
 </li>

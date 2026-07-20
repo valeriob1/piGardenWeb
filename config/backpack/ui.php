@@ -28,18 +28,12 @@ return [
     'developer_link' => 'http://lejubila.net',
     'show_powered_by' => true,
 
-    // -------------
-    // GLOBAL STYLES
-    // -------------
-
-    // The app's views (sidebar, dashboard, zone pages, custom buttons…) use
-    // FontAwesome 4 class names such as "fa fa-dashboard", "fa-picture-o",
-    // "fa-files-o". Backpack 6 ships Line Awesome instead, so without this the
-    // icons silently render as nothing. Loading FA 4.7 keeps every existing
-    // icon working without rewriting the views.
-    'styles' => [
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css',
-    ],
+    // NOTE: FontAwesome 4.7 (which this app's views rely on) is NOT loaded from
+    // here. Anything in 'styles' goes through Basset, which mirrors assets into
+    // storage and breaks the stylesheet's relative "../fonts/" URLs, leaving
+    // every icon as an empty box. It is loaded instead as a plain <link> from
+    // resources/views/vendor/backpack/ui/inc/header_metas.blade.php, pointing at
+    // the copy already bundled in public/.
 
     // NOTE: the layout classes (sidebar/header colours) are NOT set here —
     // the active theme's config takes precedence over this file, so they live
