@@ -1,4 +1,4 @@
-@extends('backpack::blank')
+@extends(backpack_view('blank'))
 
 @section('after_styles')
     {{-- <link rel="stylesheet" href="{{ asset("css/pigarden.css") }}"> --}}

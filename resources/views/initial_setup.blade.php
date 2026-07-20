@@ -1,4 +1,4 @@
-@extends('backpack::blank')
+@extends(backpack_view('blank'))
 
 @section('body_class', 'initial-setup')
 
