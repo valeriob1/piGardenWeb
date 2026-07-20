@@ -9,9 +9,7 @@ use App\PiGardenSocketClient;
 use App\ScheduleHelper;
 use App\CronHelper;
 use Illuminate\Http\Request;
-use mysql_xdevapi\Exception;
 use Redirect;
-use Illuminate\Support\Facades\Input;
 use Validator;
 
 class PiGardenAdminController extends PiGardenBaseController
@@ -355,11 +353,6 @@ class PiGardenAdminController extends PiGardenBaseController
 
         return redirect()->back();
 
-        /*
-        \Alert::error(trans('pigarden.prova'))->flash();
-        return redirect()->back()->withInput($request->input());
-        */
-
     }
 
     /**
@@ -507,22 +500,5 @@ class PiGardenAdminController extends PiGardenBaseController
         return $request->ajax() ? json_encode($this->data) : Redirect::back();
 
     }
-
-    /*
-    public function getProva(){
-
-        return view('prova');
-
-    }
-
-    public function postProva(Request $request){
-
-        $input = $request->input();
-        return '<pre>'.print_r($input,true).'</pre>';
-
-        return redirect()->back()->withInput(Input::all())->with('message', 'prova messaggio');
-
-    }
-    */
 
 }

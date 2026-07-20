@@ -84,8 +84,8 @@ class BackpackUser extends User
     protected function generateApiToken() {
         while(true) {
             $t = Str::random(60);
-            $id = (int)$this->id;
-            if(!static::where('id', $id)->where('api_token', $t)->first())
+            // the token must be unique across ALL users (it's the api auth credential)
+            if(!static::where('api_token', $t)->first())
                 break;
         }
         return $t;

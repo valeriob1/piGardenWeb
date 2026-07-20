@@ -11,7 +11,8 @@
 |
 */
 
-if (env('APP_FORCE_HTTPS', false) ) {
+// Use config() rather than env(): env() returns null once `php artisan config:cache` is run
+if (config('pigarden.force_https', false)) {
     URL::forceScheme('https');
 }
 

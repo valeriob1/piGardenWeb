@@ -19,8 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
+// piGarden's log_send() posts here via curl -d (POST); a GET route that
+// creates records would violate HTTP semantics and invite accidental writes
 Route::middleware('auth:api')->post('/log', "ApiController@postLog");
-Route::middleware('auth:api')->get('/log', "ApiController@postLog");
 
 
 

@@ -22,7 +22,7 @@ class PiGardenSocketClient {
     {
         $this->ip = config('pigarden.socket_client_ip');
         $this->port = config('pigarden.socket_client_port');
-        $prevRequest = [];
+        $this->prevRequest = [];
     }
 
     /**
@@ -35,6 +35,8 @@ class PiGardenSocketClient {
         if (!$this->socket) {
             throw new Exception($errstr, $errno);
         }
+        // Timeout on read/write: without it a stalled socket server hangs the web request forever
+        stream_set_timeout($this->socket, 30);
     }
 
     /**
@@ -45,7 +47,23 @@ class PiGardenSocketClient {
         if ( $this->socket )
         {
             fclose($this->socket);
+            $this->socket = null;
         }
+    }
+
+    /**
+     * Validate a zone alias before interpolating it into the line-based socket protocol:
+     * spaces or CR/LF inside an alias would inject extra tokens into the command
+     * @param $zone string
+     * @return string the validated zone
+     * @throws Exception
+     */
+    protected function validateZone($zone)
+    {
+        if (!is_string($zone) || $zone === '' || !preg_match('/^[A-Za-z0-9_.\-]+$/', $zone)) {
+            throw new Exception("Invalid zone name");
+        }
+        return $zone;
     }
 
     /**
@@ -62,7 +80,16 @@ class PiGardenSocketClient {
 
         $in = "";
         while (!feof($this->socket)) {
-            $in .= fgets($this->socket, 1024);
+            $chunk = fgets($this->socket, 1024);
+            if ($chunk === false) {
+                // read failed or timed out: stop instead of spinning forever on a stalled socket
+                $meta = stream_get_meta_data($this->socket);
+                if (!empty($meta['timed_out'])) {
+                    throw new Exception("Socket read timeout");
+                }
+                break;
+            }
+            $in .= $chunk;
         }
         return $in;
     }
@@ -112,9 +139,16 @@ class PiGardenSocketClient {
             return $this->prevRequest[$command];
         }
 
-        $this->open();
-        $this->put($this->addCredentialsToCommand($command));
-        $json_response = $this->get();
+        try {
+            $this->open();
+            $this->put($this->addCredentialsToCommand($command));
+            $json_response = $this->get();
+        } finally {
+            // Always release the socket, also on error paths: without this every failed
+            // request leaked a connection until the end of the php process
+            $this->close();
+        }
+
         if (!$json_response)
         {
             throw new Exception("Invalid socket client response");
@@ -136,7 +170,6 @@ class PiGardenSocketClient {
             throw new Exception("Invalid version of piGarden (required version ".config('pigarden.pigarden_version_support.ver').'.'.config('pigarden.pigarden_version_support.sub').".* )");
         }
 
-        $this->close();
         $this->prevRequest[$command] = $response;
         return $response;
     }
@@ -164,7 +197,7 @@ class PiGardenSocketClient {
      */
     public function zoneOpen( $zone, $force=false )
     {
-        return $this->execCommand('open '.$zone.($force ? ' force' : ''));
+        return $this->execCommand('open '.$this->validateZone($zone).($force ? ' force' : ''));
     }
 
     /**
@@ -177,7 +210,7 @@ class PiGardenSocketClient {
      */
     public function zoneOpenIn( $zone, $start, $length, $force=false )
     {
-        return $this->execCommand('open_in '.$start.' '.$length.' '.$zone.($force ? ' force' : ''));
+        return $this->execCommand('open_in '.(int)$start.' '.(int)$length.' '.$this->validateZone($zone).($force ? ' force' : ''));
     }
 
     /**
@@ -186,7 +219,7 @@ class PiGardenSocketClient {
      * @throws Exception
      */
     public function zoneOpenInCancel( $zone ){
-        return $this->execCommand('del_cron_open_in '.$zone);
+        return $this->execCommand('del_cron_open_in '.$this->validateZone($zone));
     }
 
     /**
@@ -196,13 +229,13 @@ class PiGardenSocketClient {
      */
     public function zoneClose( $zone )
     {
-        return $this->execCommand('close '.$zone);
+        return $this->execCommand('close '.$this->validateZone($zone));
     }
 
     /**
      * @param boolean $disable_scheduling
      * @return mixed|string
-     * @throws Excepion
+     * @throws Exception
      */
     public function zoneCloseAll( $disable_scheduling=false )
     {
@@ -211,7 +244,7 @@ class PiGardenSocketClient {
 
     /**
      * @return mixed|string
-     * @throws Excepion
+     * @throws Exception
      */
     public function zoneAllCronEnable()
     {
@@ -220,7 +253,7 @@ class PiGardenSocketClient {
 
     /**
      * @return mixed|string
-     * @throws Excepion
+     * @throws Exception
      */
     public function reboot( )
     {
@@ -229,7 +262,7 @@ class PiGardenSocketClient {
 
     /**
      * @return mixed|string
-     * @throws Excepion
+     * @throws Exception
      */
     public function poweroff( )
     {
@@ -243,7 +276,7 @@ class PiGardenSocketClient {
      */
     public function delCronOpen( $zone )
     {
-        return $this->execCommand('del_cron_open '.$zone);
+        return $this->execCommand('del_cron_open '.$this->validateZone($zone));
     }
 
     /**
@@ -253,7 +286,7 @@ class PiGardenSocketClient {
      */
     public function delCronClose( $zone )
     {
-        return $this->execCommand('del_cron_close '.$zone);
+        return $this->execCommand('del_cron_close '.$this->validateZone($zone));
     }
 
     /**
@@ -269,6 +302,7 @@ class PiGardenSocketClient {
      */
     public function addCronOpen( $zone, $min, $hour, $dom, $month, $dow, $enabled)
     {
+        $zone = $this->validateZone($zone);
         $disabled = $enabled ? '' : 'disabled';
         return $this->execCommand("add_cron_open $zone $min $hour $dom $month $dow $disabled");
     }
@@ -286,6 +320,7 @@ class PiGardenSocketClient {
      */
     public function addCronClose( $zone, $min, $hour, $dom, $month, $dow, $enabled)
     {
+        $zone = $this->validateZone($zone);
         $disabled = $enabled ? '' : 'disabled';
         return $this->execCommand("add_cron_close $zone $min $hour $dom $month $dow $disabled");
     }
@@ -359,7 +394,7 @@ class PiGardenSocketClient {
      */
     public function delSchedule( $zone )
     {
-        return $this->execCommand('cmd_pigardensched del '.$zone);
+        return $this->execCommand('cmd_pigardensched del '.$this->validateZone($zone));
     }
 
     /**
@@ -372,6 +407,7 @@ class PiGardenSocketClient {
      */
     public function addSchedule( $zone, $duration, $time, $frequency )
     {
+        $zone = $this->validateZone($zone);
         return $this->execCommand("cmd_pigardensched add $zone $duration $time $frequency");
     }
 
@@ -383,6 +419,7 @@ class PiGardenSocketClient {
      */
     public function addTimeSchedule( $zone, $time )
     {
+        $zone = $this->validateZone($zone);
         return $this->execCommand("cmd_pigardensched add_time $zone $time");
     }
 

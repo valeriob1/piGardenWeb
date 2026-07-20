@@ -26,7 +26,9 @@ class MyAccountController extends \Backpack\Base\app\Http\Controllers\Auth\MyAcc
      */
     public function postApiTokenForm(AccountApiTokenRerquest $request)
     {
-        $result = $this->guard()->user()->update($request->except(['_token']));
+        // Only the api-token action may pass: with except('_token') any fillable
+        // field (email, password, ...) could be mass-assigned from this form
+        $result = $this->guard()->user()->update($request->only('action_api_token'));
 
         if ($result) {
             Alert::success(trans('backpack::base.account_updated'))->flash();

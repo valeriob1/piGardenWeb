@@ -44,20 +44,25 @@ Route::group([
         return redirect(config('backpack.base.route_prefix').'/dashboard');
     });
 
+    // Zone aliases: only safe characters, they are interpolated into the
+    // line-based piGarden socket protocol
+    $zonePattern = '[A-Za-z0-9_.\-]+';
+
     Route::get('zone/edit/{zone}',[
         'uses' => 'PiGardenAdminController@getZoneEdit',
         'as' => 'zone.edit'
-    ]);
+    ])->where('zone', $zonePattern);
 
     Route::get('zone/play/{zone}/{force?}', [
         'uses' => 'PiGardenAdminController@getZonePlay',
         'as' => 'zone.play'
-    ])->where('force', '(^$|force)');
+    ])->where(['zone' => $zonePattern, 'force' => '(^$|force)']);
 
     Route::get('zone/play_in/{zone}/{start}/{length}/{force?}', [
         'uses' => 'PiGardenAdminController@getZonePlayIn',
         'as' => 'zone.play_in'
     ])->where([
+        'zone' => $zonePattern,
         'start' => '[0-9]+',
         'length' => '[0-9]+',
         'force' => '(^$|force)'
@@ -66,12 +71,12 @@ Route::group([
     Route::get('zone/play_in_cancel/{zone}', [
         'uses' => 'PiGardenAdminController@getZonePlayInCancel',
         'as' => 'zone.play_in_cancel'
-    ]);
+    ])->where('zone', $zonePattern);
 
     Route::get('zone/pause/{zone}', [
         'uses' => 'PiGardenAdminController@getZonePause',
         'as' => 'zone.pause'
-    ]);
+    ])->where('zone', $zonePattern);
 
     Route::get('zone/all_stop/{disable_scheduling?}', [
         'uses' => 'PiGardenAdminController@getZoneAllStop',
@@ -97,7 +102,7 @@ Route::group([
     Route::post('cron/put/{zone}', [
         'uses' => 'PiGardenAdminController@postCronPut',
         'as' => 'cron.put'
-    ]);
+    ])->where('zone', $zonePattern);
 
     Route::get('initial_setup',[
         'uses' => 'PiGardenAdminController@getInitialSetup',
@@ -108,16 +113,5 @@ Route::group([
         'uses' => 'PiGardenAdminController@postInitialSetup',
         'as' => 'initial_setup.post'
     ]);
-
-
-    Route::get('prova', [
-        'uses' => 'PiGardenAdminController@getProva',
-        'as' => 'prova.get'
-    ]);
-    Route::post('prova', [
-        'uses' => 'PiGardenAdminController@postProva',
-        'as' => 'prova.post'
-    ]);
-
 
 }); // this should be the absolute last line of this file

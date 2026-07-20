@@ -9,7 +9,6 @@
 namespace app;
 
 use App\PiGardenSocketClient;
-use DebugBar\DebugBar;
 use Illuminate\Support\Facades\Log;
 
 class Zones {
@@ -35,12 +34,10 @@ class Zones {
         }
         catch (\Exception $e)
         {
+            // NB: don't use \Debugbar here: it's a dev-only dependency and this
+            // catch runs in production exactly when the socket server is unreachable
             self::$zones = array();
-
-            \Debugbar::info([
-                $e,
-                $status,
-            ]);
+            Log::warning('Zones::get failed: '.$e->getMessage());
         }
 
         return self::$zones;

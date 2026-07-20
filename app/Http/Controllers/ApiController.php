@@ -14,11 +14,19 @@ class ApiController extends Controller
         $max_record_log = config('pigarden.max_record_log');
 
         if($request->user()->hasPermissionTo('api log', backpack_guard_name())) {
+
+            $validated = $request->validate([
+                'type' => 'required|string|max:100',
+                'level' => 'required|string|max:50',
+                'datetime_log' => 'required|date',
+                'message' => 'nullable|string|max:5000',
+            ]);
+
             $log = Log::create([
-                'type' => $request->input('type'),
-                'level' => $request->input('level'),
-                'datetime_log' => $request->input('datetime_log'),
-                'message' => $request->input('message'),
+                'type' => $validated['type'],
+                'level' => $validated['level'],
+                'datetime_log' => $validated['datetime_log'],
+                'message' => isset($validated['message']) ? $validated['message'] : '',
                 'username' => $request->user()->email,
                 'client_ip' => $request->getClientIp(),
             ]);

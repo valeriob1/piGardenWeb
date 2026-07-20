@@ -5,6 +5,9 @@ return [
     'socket_client_user' => env('PIGARDEN_SOCKET_CLIENT_USER', ''),
     'socket_client_pwd' => env('PIGARDEN_SOCKET_CLIENT_PWD', ''),
     'tz' => env('PIGARDEN_TZ', 'Europe/Rome'),
+
+    // Read via config() (not env()) in routes so it keeps working with `php artisan config:cache`
+    'force_https' => env('APP_FORCE_HTTPS', false),
     'pigarden_version_support' => [
         'ver' => 0,
         'sub' => 6,

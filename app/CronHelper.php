@@ -65,10 +65,9 @@ class CronHelper {
     public static function normalize($strCron) {
 
         $arrCron = explode(' ', $strCron);
-        if($t=count($arrCron)<5){
-            for($i=$t; $i<5; $i++){
-                $arrCron[] = '*';
-            }
+        $count = count($arrCron);
+        for($i=$count; $i<5; $i++){
+            $arrCron[] = '*';
         }
         $arrCron = array_slice($arrCron, 0, 5);
         return implode(' ', $arrCron);
