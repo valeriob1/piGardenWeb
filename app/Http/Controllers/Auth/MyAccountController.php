@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Requests\Auth\AccountApiTokenRerquest;
 use Prologue\Alerts\Facades\Alert;
 
-class MyAccountController extends \Backpack\Base\app\Http\Controllers\Auth\MyAccountController
+class MyAccountController extends \Backpack\CRUD\app\Http\Controllers\MyAccountController
 {
 
     /**

@@ -3,17 +3,14 @@
 namespace App\Models;
 
 use App\User;
-use Backpack\Base\app\Models\Traits\InheritsRelationsFromParentModel;
-use Backpack\Base\app\Notifications\ResetPasswordNotification as ResetPasswordNotification;
-
-use Backpack\CRUD\CrudTrait;
+use Backpack\CRUD\app\Notifications\ResetPasswordNotification as ResetPasswordNotification;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
 
 
 class BackpackUser extends User
 {
-    use InheritsRelationsFromParentModel;
     use CrudTrait;
     use HasRoles;
 
