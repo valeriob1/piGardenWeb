@@ -34,8 +34,11 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R ug+rwx storage bootstrap/cache \
     && chmod +x docker/entrypoint.sh
 
+# Probe the dependency-free /health route, not "/": the home page queries
+# piGarden over the network, so probing it reported the container as unhealthy
+# whenever the Raspberry Pi was slow or unreachable.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
-    CMD curl -fsS http://localhost/ >/dev/null || exit 1
+    CMD curl -fsS http://localhost/health >/dev/null || exit 1
 
 ENTRYPOINT ["/var/www/html/docker/entrypoint.sh"]
 CMD ["apache2-foreground"]

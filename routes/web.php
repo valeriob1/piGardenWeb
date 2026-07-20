@@ -16,6 +16,14 @@ if (config('pigarden.force_https', false)) {
     URL::forceScheme('https');
 }
 
+// Container liveness probe (used by the Docker HEALTHCHECK).
+// Deliberately dependency-free: no piGarden socket, no database, no session.
+// Probing "/" instead would report the container unhealthy whenever the
+// Raspberry Pi is slow or offline, which says nothing about this container.
+Route::get('/health', function () {
+    return response('ok', 200)->header('Content-Type', 'text/plain');
+})->withoutMiddleware(['web'])->name('health');
+
 Route::group(['namespace' => 'PiGardenBase'], function() {
     Route::get('/', [
         'uses' => 'PiGardenPublicController@getHome',
