@@ -122,14 +122,10 @@ class ScheduleHelper
      * @return boolean|string
      */
     public static function aliasIsInSequence($alias, $sequence) {
+        // NB: no \Debugbar here — it's a dev-only dependency and this runs in prod
+        // (called from zone/edit.blade.php)
         foreach ($sequence as $a => $seq){
             foreach($seq as $i){
-
-                \Debugbar::info([
-                    'i[alias]' => $i['alias'],
-                    'alias' => $alias,
-                ]);
-
                 if($i['alias'] == $alias) {
                     return $a;
                 }
