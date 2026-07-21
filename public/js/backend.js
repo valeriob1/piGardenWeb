@@ -8,9 +8,14 @@ $(document).ready(function(){
     }
     updateDashboard(url, true);
 });
-function updateDashboard(urlAction, first=false)
+/**
+ * One status request, no timer. Kept separate from updateDashboard() because
+ * that one re-arms the polling loop: calling it to force a refresh would add a
+ * second loop every time, doubling the polling rate.
+ */
+function updateDashboardOnce(urlAction, first=false)
 {
-    $.ajax({
+    return $.ajax({
         type : "GET",
         url : urlAction + (first ? '/get_cron_open_in' : ''),
         dataType: 'json',
@@ -30,6 +35,25 @@ function updateDashboard(urlAction, first=false)
         complete: function(jqXHR, textStatus){
         }
     });
+}
+
+/**
+ * Refresh the state right now, instead of waiting for the next poll tick.
+ * Called after a zone command so the card stops showing the old state even
+ * when the command itself timed out on a slow piGarden.
+ */
+function refreshStatusNow()
+{
+    var url = '/jsonDashboardStatus';
+    if (typeof urlJsonDashboardStatus !== 'undefined') {
+        url = urlJsonDashboardStatus;
+    }
+    return updateDashboardOnce(url);
+}
+
+function updateDashboard(urlAction, first=false)
+{
+    updateDashboardOnce(urlAction, first);
 
     var timeout = 20000;
     if (typeof timeoutJsonDashboardStatus !== 'undefined') {

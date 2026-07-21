@@ -126,11 +126,9 @@
                             var item = {};
                             $scope.items.push(item);
                         } else {
-                            new PNotify({
-                                title: $scope.maxErrorTitle,
-                                text: $scope.maxErrorMessage,
-                                type: 'error'
-                            });
+                            {{-- PNotify non esiste piu' nel tema di Backpack 6:
+                                 pigardenNotify() (public/js/base.js) usa Noty --}}
+                            pigardenNotify($scope.maxErrorTitle + ': ' + $scope.maxErrorMessage, 'error');
                         }
                     }
                     else {

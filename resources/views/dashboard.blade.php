@@ -248,6 +248,12 @@
                     },
                     complete: function(jqXHR, textStatus){
                         $('#box-zone-'+id+' .overlay').remove();
+                        // Ask piGarden for the real state right away. On a slow
+                        // Raspberry the command can hit the socket read timeout
+                        // even though the valve did move: without this the card
+                        // kept the old state until the next 20s poll, which read
+                        // as "the confirmation never arrives".
+                        refreshStatusNow();
                     }
                 });
 

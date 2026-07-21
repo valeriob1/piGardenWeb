@@ -11,7 +11,11 @@ return [
     'socket_client_connect_timeout' => env('PIGARDEN_SOCKET_CLIENT_CONNECT_TIMEOUT', 5),
     // Seconds to wait for piGarden's reply once connected (building the status
     // is a fork-heavy bash script on the Pi, so allow more than the connect).
-    'socket_client_read_timeout' => env('PIGARDEN_SOCKET_CLIENT_READ_TIMEOUT', 15),
+    // An open/close is slower still — valve pulse, rain checks, then the status
+    // itself — and at 15s it timed out mid-command: the valve had moved but the
+    // UI reported an error. The request is async, so a longer wait costs the
+    // page nothing.
+    'socket_client_read_timeout' => env('PIGARDEN_SOCKET_CLIENT_READ_TIMEOUT', 30),
 
     'tz' => env('PIGARDEN_TZ', 'Europe/Rome'),
 

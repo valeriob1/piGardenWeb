@@ -311,6 +311,9 @@
                 },
                 complete: function(jqXHR, textStatus){
                     $('#box-zone-'+id+' .overlay').remove();
+                    // vedi dashboard.blade.php: forza subito la lettura dello
+                    // stato reale, senza aspettare il poll da 20 secondi
+                    refreshStatusNow();
                 }
             });
 

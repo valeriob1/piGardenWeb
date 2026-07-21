@@ -110,16 +110,37 @@ function updateDateTime(status){
     updateElement('#pigarden-date-time', status.date_time);
 }
 
+/**
+ * Show a toast.
+ *
+ * This used to call PNotify directly. Backpack 6's CoreUI theme ships Noty
+ * instead, so PNotify is undefined and every call threw a ReferenceError:
+ * neither piGarden's messages ("Solenoid open") nor request errors ever
+ * reached the user — a command that failed looked exactly like one that was
+ * still running. Prefer Noty, fall back to PNotify for older themes, and
+ * never throw if neither is loaded.
+ */
+function pigardenNotify(text, type){
+    // Noty knows alert/success/error/warning/info; anything else would render
+    // an unstyled toast
+    var known = ['success', 'error', 'warning', 'info'];
+    if (known.indexOf(type) === -1) {
+        type = 'info';
+    }
+    if (typeof Noty !== 'undefined') {
+        new Noty({ text: text, type: type, timeout: 5000 }).show();
+    } else if (typeof PNotify !== 'undefined') {
+        new PNotify({ text: text, type: type, icon: false });
+    } else {
+        console.warn('[piGarden] ' + type + ': ' + text);
+    }
+}
+
 function updateNotify(status){
     if(!(typeof status['messages'] === undefined)){
         $.each(status['messages'],function(type, messages){
             $.each(messages,function(i, message){
-                new PNotify({
-                    // titSession::all()le: 'Regular Notice',
-                    text: message,
-                    type: type,
-                    icon: false
-                });
+                pigardenNotify(message, type);
             });
         });
     }
@@ -128,12 +149,9 @@ function updateNotify(status){
 function callBackAjaxError(jqXHR, textStatus, errorThrown){
     console.log(jqXHR);
     console.log(textStatus);
-    new PNotify({
-        // titSession::all()le: 'Regular Notice',
-        text: textStatus,
-        type: warning,
-        icon: false
-    });
+    // 'warning' was also written unquoted here, a second ReferenceError on
+    // exactly the path that was supposed to report the failure
+    pigardenNotify(errorThrown ? errorThrown + ' (' + textStatus + ')' : textStatus, 'warning');
 }
 
 (function($){
