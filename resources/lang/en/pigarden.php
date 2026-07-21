@@ -204,6 +204,7 @@ return array(
     'icon' => [
         'open' => 'Open icon',
         'close' => 'Close icon',
+        'browse' => 'Browse',
     ],
 
     'log' => [

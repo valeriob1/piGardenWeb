@@ -202,6 +202,7 @@ return array(
     'icon' => [
         'open' => 'Icona aperto',
         'close' => 'Icona chiuso',
+        'browse' => 'Sfoglia',
     ],
 
     'log' => [
