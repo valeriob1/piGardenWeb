@@ -119,13 +119,23 @@ This fork runs a real garden, but be aware:
 
 ## Screenshots
 
-![piGardenWeb Dashboard](https://www.lejubila.net/wp-content/uploads/2021/10/piGardeWeb_620_dashboard.png)
+The dashboard: every zone is a card showing whether it is watering, with a
+one-tap start/stop and a menu for a delayed start. Rain, weather and soil
+sensors are grouped below.
 
-![piGardenWeb Zone setting](https://www.lejubila.net/wp-content/uploads/2020/09/piGardenWeb_600_zone.png)
+![piGardenWeb dashboard](docs/screenshots/dashboard.png)
 
-![piGardenWeb Customize icons](https://www.lejubila.net/wp-content/uploads/2020/09/piGardenWeb_600_icons.png)
+Per-zone page, with the opening and closing schedules:
 
-![piGardenWeb Manage users and permissions](https://www.lejubila.net/wp-content/uploads/2020/09/piGardenWeb_600_user_and_permission.png)
+![piGardenWeb zone page](docs/screenshots/zone.png)
+
+The layout collapses to a single column on a phone, with full-width controls —
+handy for starting a zone while you're out in the garden:
+
+<img src="docs/screenshots/dashboard-mobile.png" alt="piGardenWeb on a phone" width="320">
+
+> Screenshots are from this fork (Laravel 11 / Backpack 6). The original
+> project's UI looked different — see [upstream](https://github.com/lejubila/piGardenWeb).
 
 ## Credits
 

@@ -27,7 +27,7 @@
 @section('content')
 
     @if(!empty($error->description))
-    <div class="callout callout-danger lead">
+    <div class="alert alert-danger">
         <h4>PiGarden server error</h4>
         <pre><?php print_r($error) ?></pre>
     </div>
@@ -37,7 +37,7 @@
 
     @if(!empty($zone))
     <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="col-12">
             @include('_partials.zone', ['zone' => $zone, 'force' => true])
         </div>
     </div>
@@ -48,13 +48,12 @@
         <input type="hidden" name="type" value="" id="cron_type">
         <div class="row">
             @foreach(['open', 'close'] as $type)
-            <div class="col-md-6 col-sm-12 col-xs-12">
-                <div class="box box-primary box-cron
-                 box-info">
-                    <div class="box-header with-border text-center">
-                        <div class="box-title">{{ trans('pigarden.cron.'.$type.'_title') }}</div>
+            <div class="col-12 col-md-6">
+                <div class="card box-cron mb-3">
+                    <div class="card-header py-2 text-center">
+                        <div class="card-title mb-0 font-weight-bold">{{ trans('pigarden.cron.'.$type.'_title') }}</div>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table id="table-{{$type}}-cron" class="table table-cron table-striped table-hover table-borderless no-margin with-tools">
                                 <tbody>
@@ -114,10 +113,10 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <div class="box-footer clearfix" style="display: block;">
+                        <div class="card-footer clearfix" style="display: block;">
                             @if(backpack_user()->hasPermissionTo('manage cron zones', backpack_guard_name()))
-                            <button type="submit" class="btn btn-primary pull-left" onclick="$('#cron_type').val('{{$type}}')"><i class="glyphicon glyphicon-save"></i> {{trans('cron.save')}}</button>
-                            <a hred="#" class="btn btn-default pull-right" data-toggle="modal" data-target="#cronModal" data-crontype="{{$type}}" data-cronrow=""><i class="fa fa-plus"></i> {{trans('cron.add')}}</a>
+                            <button type="submit" class="btn btn-primary float-left" onclick="$('#cron_type').val('{{$type}}')"><i class="fa fa-save"></i> {{trans('cron.save')}}</button>
+                            <a hred="#" class="btn btn-secondary float-right" data-toggle="modal" data-target="#cronModal" data-crontype="{{$type}}" data-cronrow=""><i class="fa fa-plus"></i> {{trans('cron.add')}}</a>
                             @endif
                         </div>
                     </div>
@@ -129,12 +128,12 @@
 
     @if(false && $manageSchedule)
     <div class="row">
-        <div class="col-md-6 col-sm-12 col-xs-12">
-            <div class="box box-primary box-cron box-info">
-                <div class="box-header with-border text-center">
-                    <div class="box-title">{{ trans('pigarden.schedule.irrigation_title') }}</div>
+        <div class="col-12 col-md-6">
+            <div class="card box-cron mb-3">
+                <div class="card-header py-2 text-center">
+                    <div class="card-title mb-0 font-weight-bold">{{ trans('pigarden.schedule.irrigation_title') }}</div>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     @if(!empty($scheduleZone['after']))
                         <p class="text-center font-italic">{{ trans('pigarden.schedule.in_sequence_msg') }}</p>
                         <p class="text-center font-italic"><a href="{{route('zone.edit', ['zone' => App\ScheduleHelper::aliasIsInSequence($zone->name, $sequenceSchedule)])}}">{{ trans('pigarden.schedule.manage_the_sequence') }}</a></p>
@@ -143,12 +142,12 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-sm-12 col-xs-12">
-            <div class="box box-primary box-cron box-info">
-                <div class="box-header with-border text-center">
-                    <div class="box-title">{{ trans('pigarden.schedule.sequence_title') }}</div>
+        <div class="col-12 col-md-6">
+            <div class="card box-cron mb-3">
+                <div class="card-header py-2 text-center">
+                    <div class="card-title mb-0 font-weight-bold">{{ trans('pigarden.schedule.sequence_title') }}</div>
                 </div>
-                <div class="box-body">
+                <div class="card-body">
                     @forelse($sequenceZone as $seq)
                         <p>
                             <span>{{$seq['alias']}}}</span>

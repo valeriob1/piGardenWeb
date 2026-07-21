@@ -37,6 +37,13 @@
 .zone-card .zone-open-in {
     margin-top: .5rem;
 }
+/* Cap the action button: on a full-width card (zone page) w-100 alone made it
+   stretch across the whole screen. */
+.zone-card .btn-group-zone {
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
 /* The AJAX spinner overlay appended while a zone command runs */
 .zone-card { position: relative; }
 .zone-card .overlay {
