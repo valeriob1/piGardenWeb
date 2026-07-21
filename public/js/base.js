@@ -85,6 +85,13 @@ function updateZones(status){
 }
 
 function updateSensor(data){
+    // vue_sensor only exists where the sensor panel is rendered (the dashboard).
+    // Other pages — the zone page — load this script without Vue, so guard it:
+    // throwing here aborted the whole AJAX success callback and stopped
+    // updateNotify() from ever running on those pages.
+    if (typeof vue_sensor === 'undefined' || !vue_sensor) {
+        return;
+    }
     if (checkExitsElement(data, 'status', 'sensor')){
         vue_sensor.sensor = data.status.sensor;
     }
