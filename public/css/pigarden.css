@@ -1,3 +1,14 @@
+/* ---- Header ----
+   CoreUI hard-codes a grey .navbar-brand that navbar-dark doesn't override,
+   leaving the project name at ~1:1 contrast on the coloured header (only
+   readable on hover). Force it white: ~4.1:1, fine for large bold text. */
+.app-header .navbar-brand,
+.app-header .navbar-brand:hover,
+.app-header .navbar-brand:focus {
+    color: #fff;
+}
+.app-header .navbar-brand b { color: inherit; }
+
 /* ---- Zone cards (Bootstrap 4 / CoreUI) ---- */
 .zone-card {
     border-top: 3px solid #d1d4d7;
