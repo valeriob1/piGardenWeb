@@ -99,7 +99,7 @@ class PiGardenBaseController extends Controller
                 if(property_exists($status->last_weather_online, 'display_location') && property_exists($status->last_weather_online->display_location, 'city') ){
                     $weather->observation_time = $status->last_weather_online->display_location->city.', '.$weather->observation_time;
                 }
-                $weather->weather = trans('pigarden.'.$status->last_weather_online->weather);
+                $weather->weather = $this->transPiGarden($status->last_weather_online->weather);
                 if($status->last_weather_online->icon_url && 0 === strpos($status->last_weather_online->icon_url, 'http://icons.wxug.com/i/c/k/')){
                     $i = pathinfo($status->last_weather_online->icon_url);
                     $weather->icon_url = '//icons.wxug.com/i/c/v1/'.$i['filename'].'.svg';
@@ -111,7 +111,7 @@ class PiGardenBaseController extends Controller
                 $weather->relative_humidity = $status->last_weather_online->relative_humidity;
                 $weather->wind_degrees = $status->last_weather_online->wind_degrees; // Gradi direzione vento
                 $weather->wind_degress_style = "transform:rotate({$weather->wind_degrees}deg);-ms-transform:rotate({$weather->wind_degrees}deg);-webkit-transform:rotate({$weather->wind_degrees}deg);";
-                $weather->wind_dir = trans('pigarden.'.$status->last_weather_online->wind_dir);
+                $weather->wind_dir = $this->transPiGarden($status->last_weather_online->wind_dir);
                 $weather->wind_kph = $status->last_weather_online->wind_kph;
                 $weather->wind_gust_kph = $status->last_weather_online->wind_gust_kph; // Raffiche
                 $weather->pressure_mb = $status->last_weather_online->pressure_mb;
@@ -137,6 +137,28 @@ class PiGardenBaseController extends Controller
 
     }
 
+    /**
+     * Translate a value coming from piGarden, falling back to the value itself.
+     *
+     * These strings (weather description, wind direction, status messages) are
+     * produced by piGarden and used as translation keys. When a key is missing,
+     * Laravel returns the key itself, so the UI would show literal text like
+     * "pigarden.Nubi sparse". Showing the raw value is always better.
+     *
+     * @param string|null $value
+     * @return string
+     */
+    protected function transPiGarden($value)
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        $key = 'pigarden.'.$value;
+
+        return \Lang::has($key) ? trans($key) : $value;
+    }
+
     protected function makeError($description, $code=0)
     {
         $error = new \stdClass();
@@ -156,19 +178,19 @@ class PiGardenBaseController extends Controller
         $a = null;
         if(property_exists($status, 'info') && !empty($status->info))
         {
-            $a = \Alert::info(trans('pigarden.'.$status->info));
+            $a = \Alert::info($this->transPiGarden($status->info));
         }
         if(property_exists($status, 'warning') && !empty($status->warning))
         {
-            $a = \Alert::warning(trans('pigarden.'.$status->warning));
+            $a = \Alert::warning($this->transPiGarden($status->warning));
         }
         if(property_exists($status, 'error') && !empty($status->error->description))
         {
-            $a = \Alert::error(trans('pigarden.'.$status->error->description));
+            $a = \Alert::error($this->transPiGarden($status->error->description));
         }
         if(property_exists($status, 'success') && !empty($status->success))
         {
-            $a = \Alert::success(trans('pigarden.'.$status->success));
+            $a = \Alert::success($this->transPiGarden($status->success));
         }
 
         if($setFlash && !is_null($a))

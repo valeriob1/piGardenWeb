@@ -3,6 +3,7 @@ return array(
     'start' => 'Start',
     'pause' => 'Pause',
     'end' => 'Fine',
+    'last_rain' => 'Ultima pioggia',
     'last_rain_sensor' => 'Ultima pioggia (sensore)',
     'last_rain_online' => 'Ultima pioggia (online)',
     'unknown' => 'sconosciuto',
@@ -98,6 +99,8 @@ return array(
     'zones' => 'Zone',
     'zone' => 'Zona',
     'zones_empty' => 'Nessuna zona trovata',
+    'zone_state_open' => 'In irrigazione',
+    'zone_state_closed' => 'Ferma',
     'force_open_with_rain' => "In caso di pioggia forza l'apertura",
 
     'cron' => [

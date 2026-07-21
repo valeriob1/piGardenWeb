@@ -3,6 +3,7 @@ return array(
     'start' => 'Start',
     'pause' => 'Pause',
     'end' => 'End',
+    'last_rain' => 'Last rain',
     'last_rain_sensor' => 'Latter rain (sensor)',
     'last_rain_online' => 'Latter rain (online)',
     'unknown' => 'unknown',
@@ -100,6 +101,8 @@ return array(
     'zones' => 'Zones',
     'zone' => 'Zone',
     'zones_empty' => 'No zones',
+    'zone_state_open' => 'Watering',
+    'zone_state_closed' => 'Idle',
     'force_open_with_rain' => 'With rain force the open',
 
     'cron' => [

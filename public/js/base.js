@@ -39,18 +39,37 @@ function updateZones(status){
             updateElement('#btn-zone-'+zone.name+' .button-zone-text', zone.actionButtonText);
             updateElement('#btn-zone-image-'+zone.name, zone.imageSrc, 'src');
             updateElement('.link-zone-'+zone.name+' i', (zone.state == 0 ? 'fa fa-toggle-off' : 'fa fa-toggle-on'), 'class');
+
+            // Card state: badge text/colour, card highlight and button colour.
+            // Bootstrap 4 classes — the old markup used AdminLTE/BS3 ones.
+            var isOpen = zone.state != 0;
+            // Labels come from the blade (translated); fall back so a page that
+            // doesn't define them can't throw a ReferenceError here.
+            var lblOpen   = (typeof pigardenZoneStateOpen   !== 'undefined') ? pigardenZoneStateOpen   : 'ON';
+            var lblClosed = (typeof pigardenZoneStateClosed !== 'undefined') ? pigardenZoneStateClosed : 'OFF';
+            var badge  = $('#badge-zone-'+zone.name);
+            if (badge.length > 0) {
+                badge.text(isOpen ? lblOpen : lblClosed)
+                     .toggleClass('badge-success', isOpen)
+                     .toggleClass('badge-secondary', !isOpen);
+            }
+            $('#box-zone-'+zone.name).toggleClass('zone-open', isOpen);
+            $('#btn-zone-'+zone.name+', #btn-zone-'+zone.name+'+button.dropdown-toggle')
+                .toggleClass('btn-warning', isOpen)
+                .toggleClass('btn-success', !isOpen);
+
             if( zone.cronOpenInText !== null){
                 $('#text-btn-zone-open-in-cancel-'+zone.name).html(zone.cronOpenInText);
                 if( zone.cronOpenInText != ""){
-                    $("#box-zone-"+zone.name+" li.open_in_start").addClass('hidden');
-                    $("#box-zone-"+zone.name+" li.open_in_set").removeClass('hidden');
-                    $('#btn-zone-'+zone.name+'+button.dropdown-toggle span.glyphicon').addClass('text-danger');
-                    $('#text-btn-zone-open-in-cancel-'+zone.name).parents('span.dropdown.hidden').removeClass('hidden');
+                    $("#box-zone-"+zone.name+" li.open_in_start").addClass('d-none');
+                    $("#box-zone-"+zone.name+" li.open_in_set").removeClass('d-none');
+                    $('#btn-zone-'+zone.name+'+button.dropdown-toggle i.fa').addClass('text-danger');
+                    $('#wrp-open-in-'+zone.name).removeClass('d-none');
                 } else {
-                    $("#box-zone-"+zone.name+" li.open_in_start").removeClass('hidden');
-                    $("#box-zone-"+zone.name+" li.open_in_set").addClass('hidden');
-                    $('#btn-zone-'+zone.name+'+button.dropdown-toggle span.glyphicon').removeClass('text-danger');
-                    $('#text-btn-zone-open-in-cancel-'+zone.name).parents('span.dropdown.hidden').addClass('hidden');
+                    $("#box-zone-"+zone.name+" li.open_in_start").removeClass('d-none');
+                    $("#box-zone-"+zone.name+" li.open_in_set").addClass('d-none');
+                    $('#btn-zone-'+zone.name+'+button.dropdown-toggle i.fa').removeClass('text-danger');
+                    $('#wrp-open-in-'+zone.name).addClass('d-none');
                 }
             }
             var dropdown = $('#btn-zone-'+zone.name+'+button.dropdown-toggle');

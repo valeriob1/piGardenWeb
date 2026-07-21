@@ -1,6 +1,62 @@
-.box{
-    border-radius:3px;
-    border-top-width: 3px;
+/* ---- Zone cards (Bootstrap 4 / CoreUI) ---- */
+.zone-card {
+    border-top: 3px solid #d1d4d7;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+/* A watering zone is meant to be obvious at a glance */
+.zone-card.zone-open {
+    border-top-color: #4dbd74;
+    box-shadow: 0 0 0 .1rem rgba(77, 189, 116, .25);
+}
+.zone-card .zone-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+.zone-card .zone-badge {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    padding: .35em .7em;
+}
+.zone-card img.sprinkler {
+    width: 96px;
+    max-width: 60%;
+    height: auto;
+}
+.zone-card .zone-open-in {
+    margin-top: .5rem;
+}
+/* The AJAX spinner overlay appended while a zone command runs */
+.zone-card { position: relative; }
+.zone-card .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, .7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: #20a8d8;
+    border-radius: inherit;
+    z-index: 10;
+}
+
+/* Nested "start in..." menu needs room on touch screens */
+.zone-dropdown .dropdown-item { padding: .5rem 1rem; }
+
+/* ---- Sensors ---- */
+.sensor-item { margin-bottom: .75rem; }
+.sensor-icon { font-size: 2rem; display: block; margin-bottom: .25rem; }
+
+/* ---- Mobile ---- */
+@media (max-width: 575.98px) {
+    /* Full-width, thumb-sized controls */
+    .zone-card .btn-group-zone .btn { font-size: 1.05rem; padding: .6rem .5rem; }
+    .zone-card img.sprinkler { width: 80px; }
+    .dashboard-actions { width: 100%; }
+    .dashboard-actions .btn-group,
+    .dashboard-actions > a.btn { flex: 1 1 auto; }
+    .wrp-pigarden-date-time { width: 100%; text-align: center; margin-bottom: .5rem; }
 }
 
 .callout pre{
@@ -8,11 +64,6 @@
     border:0;
     color:#fff;
     font-style: italic;
-}
-
-.box-zone img.sprinkler {
-    width: 100px;
-    margin: 0 0 10px 10px;
 }
 .box-weather{
     margin-bottom:10px;
