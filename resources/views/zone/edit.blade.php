@@ -394,7 +394,15 @@
                 });
             });
 
-            $('#cron-min, #cron-hour, #cron-dom, #cron-month, #cron-dow').select2();
+            // dropdownParent is required inside a Bootstrap modal: by default
+            // select2 appends its dropdown to <body>, where it ends up behind
+            // the modal (backdrop z-index 1040, modal 1050) — the fields looked
+            // present but nothing could be picked. Anchoring it to the modal
+            // puts it in the same stacking context and restores focus handling.
+            $('#cron-min, #cron-hour, #cron-dom, #cron-month, #cron-dow').select2({
+                dropdownParent: $('#cronModal'),
+                width: '100%'
+            });
 
         });
 
