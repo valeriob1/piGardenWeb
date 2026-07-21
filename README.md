@@ -115,7 +115,6 @@ This fork runs a real garden, but be aware:
 
 - The automated tests cover the socket/cron logic and that pages render — **not** the full admin flows. Valve control, scheduling and the hardware side were verified by hand.
 - Always test valve open/close and your schedules after deploying, ideally while you can watch the system.
-- Screenshots below are from the upstream project; the current UI is Backpack 6 and looks slightly different.
 
 ## Screenshots
 
