@@ -357,6 +357,14 @@
             //alert('type:' + type + ' row:' + row + ' state:' +  state);
         }
 
+        // Il tema CoreUI avvolge il contenuto in <div class="container-fluid animated fadeIn">:
+        // l'animazione (animation-fill-mode: both su opacity) crea un stacking context,
+        // quindi lo z-index 1050 del modale vale solo dentro quel contenitore. Il backdrop
+        // (z-index 1040, figlio di <body>) finisce sopra tutto il sottoalbero e copre il
+        // modale: si vede ma non si puo' cliccare nulla. Spostandolo in <body> il modale
+        // torna nello stesso stacking context del backdrop e riprende a ricevere i click.
+        $('#cronModal').appendTo('body');
+
         // Prepara i campi nella finestra di editing schedulazione
         $('#cronModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
@@ -394,11 +402,9 @@
                 });
             });
 
-            // dropdownParent is required inside a Bootstrap modal: by default
-            // select2 appends its dropdown to <body>, where it ends up behind
-            // the modal (backdrop z-index 1040, modal 1050) — the fields looked
-            // present but nothing could be picked. Anchoring it to the modal
-            // puts it in the same stacking context and restores focus handling.
+            // dropdownParent ancora il dropdown al modale: di default select2 lo
+            // appende a <body>, dove finirebbe dietro al modale (backdrop 1040,
+            // modale 1050) e il focus verrebbe rubato dal modale stesso.
             $('#cron-min, #cron-hour, #cron-dom, #cron-month, #cron-dow').select2({
                 dropdownParent: $('#cronModal'),
                 width: '100%'
