@@ -12,3 +12,6 @@ yarn-error.log
 .env
 .phpunit.result.cache
 .phpunit.cache
+
+# elFinder thumbnail cache (generated at runtime)
+/public/uploads/.tmb/
