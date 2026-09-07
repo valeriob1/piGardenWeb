@@ -1,0 +1,46 @@
+# Variante di deploy per una rete macvlan: il pannello prende un indirizzo
+# proprio sulla LAN invece di essere raggiunto solo su una porta dell'host.
+#
+# Perche' un file a parte e non un'opzione del compose principale: quello resta
+# generico e funziona ovunque con la sola bridge, mentre questo descrive una
+# rete che deve gia' esistere sull'host. Non si puo' rendere condizionale una
+# rete in un file solo, quindi si sceglie il file.
+#
+# Uso: puntare qui il "Compose path" dello stack (o `docker compose -f
+# docker-compose.macvlan.yml up -d`). La rete va creata prima, per esempio:
+#
+#   docker network create -d macvlan --subnet 192.168.99.0/24 \
+#     --gateway 192.168.99.254 -o parent=<interfaccia> macvlan_net
+#
+# ⚠️ Il nome dello stack NON va cambiato: i volumi sono prefissati col nome del
+# progetto, quindi rinominarlo li fa ripartire vuoti e il database SQLite del
+# pannello sembrerebbe azzerato.
+#
+# Il servizio e' ereditato con `extends` invece che ricopiato: le variabili
+# d'ambiente stanno in un posto solo e non possono divergere fra i due file.
+
+services:
+
+  web:
+    extends:
+      file: docker-compose.yml
+      service: web
+
+    networks:
+      # La bridge dello stack resta agganciata: il file base pubblica una porta
+      # sull'host, e senza una bridge quella pubblicazione non avrebbe modo di
+      # funzionare. Chi non ne ha bisogno puo' togliere WEB_PORT dal proprio
+      # ambiente e lasciare che risponda solo sull'indirizzo macvlan.
+      default:
+      macvlan_net:
+        ipv4_address: ${MACVLAN_IP:-192.168.99.95}
+
+networks:
+  # Creata fuori dal compose e condivisa con gli altri stack: qui si dichiara
+  # soltanto, non la si gestisce.
+  macvlan_net:
+    external: true
+
+volumes:
+  pigardenweb_storage:
+  pigardenweb_uploads:
