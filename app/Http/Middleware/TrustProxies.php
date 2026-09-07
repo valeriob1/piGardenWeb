@@ -15,6 +15,28 @@ class TrustProxies extends Middleware
     protected $proxies;
 
     /**
+     * Read the trusted proxies from the configuration.
+     *
+     * Left null the middleware ignores X-Forwarded-*, so behind a reverse proxy
+     * that terminates TLS the app keeps generating http:// links: the page loads
+     * over https and the browser blocks its own assets as mixed content.
+     *
+     * A comma separated list becomes an array; '*' is passed through as-is
+     * (meaning "trust any proxy") and only makes sense when nothing but the
+     * proxy can reach the container.
+     */
+    public function __construct()
+    {
+        $proxies = config('app.trusted_proxies');
+
+        if (is_string($proxies) && $proxies !== '' && $proxies !== '*') {
+            $proxies = array_filter(array_map('trim', explode(',', $proxies)));
+        }
+
+        $this->proxies = $proxies ?: null;
+    }
+
+    /**
      * The headers that should be used to detect proxies.
      *
      * @var int

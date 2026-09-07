@@ -58,6 +58,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Trusted Proxies
+    |--------------------------------------------------------------------------
+    |
+    | Comma separated list of reverse proxies allowed to set X-Forwarded-*,
+    | or '*' to trust any. Leave empty when the panel is reached directly.
+    |
+    | Without this, a proxy terminating HTTPS is ignored: Laravel still sees a
+    | plain HTTP request and generates http:// links and asset URLs, which the
+    | browser then blocks as mixed content on an https:// page.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

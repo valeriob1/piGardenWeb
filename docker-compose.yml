@@ -13,7 +13,16 @@ services:
       APP_ENV: production
       APP_DEBUG: "false"
       # The address you use to reach the panel (used for generated links)
+      # Behind a reverse proxy set this to the PUBLIC https:// name, and set
+      # TRUSTED_PROXIES below as well: APP_URL alone only covers links built
+      # from the console (cron, mail), not those built while serving a request.
       APP_URL: "${APP_URL:-http://192.168.1.100:8080}"
+
+      # Reverse proxy allowed to set X-Forwarded-* (comma separated, or '*').
+      # Empty when the panel is reached directly. Without it a proxy that
+      # terminates HTTPS is invisible to Laravel: the page is served over https
+      # but its assets and AJAX URLs come out as http:// and get blocked.
+      TRUSTED_PROXIES: "${TRUSTED_PROXIES:-}"
       LOG_CHANNEL: stderr
 
       # ---- Connection to piGarden running on the Raspberry Pi ----

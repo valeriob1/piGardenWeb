@@ -100,11 +100,31 @@ class PiGardenBaseController extends Controller
                     $weather->observation_time = $status->last_weather_online->display_location->city.', '.$weather->observation_time;
                 }
                 $weather->weather = $this->transPiGarden($status->last_weather_online->weather);
-                if($status->last_weather_online->icon_url && 0 === strpos($status->last_weather_online->icon_url, 'http://icons.wxug.com/i/c/k/')){
-                    $i = pathinfo($status->last_weather_online->icon_url);
+                // Le icone meteo arrivano dal driver con URL in http:// e in due
+                // forme diverse (icons.wxug.com e www.wunderground.com/static):
+                // entrambe puntano allo stesso set di GIF ormai dismesso. Si
+                // riscrivono sull'endpoint SVG attuale, protocol-relative.
+                //
+                // Non e' solo estetica: servita in http:// dentro una pagina
+                // https:// l'icona viene bloccata dal browser come mixed content
+                // e sparisce senza errori visibili.
+                $legacyIconPrefixes = [
+                    'http://icons.wxug.com/i/c/k/',
+                    'http://www.wunderground.com/static/i/c/k/',
+                ];
+                $iconUrl = $status->last_weather_online->icon_url;
+                $isLegacyIcon = false;
+                foreach ($legacyIconPrefixes as $prefix) {
+                    if ($iconUrl && 0 === strpos($iconUrl, $prefix)) {
+                        $isLegacyIcon = true;
+                        break;
+                    }
+                }
+                if ($isLegacyIcon) {
+                    $i = pathinfo($iconUrl);
                     $weather->icon_url = '//icons.wxug.com/i/c/v1/'.$i['filename'].'.svg';
                 } else {
-                    $weather->icon_url = $status->last_weather_online->icon_url;
+                    $weather->icon_url = $iconUrl;
                 }
                 $weather->temp_c = $status->last_weather_online->temp_c;
                 $weather->feelslike_c = $status->last_weather_online->feelslike_c;
