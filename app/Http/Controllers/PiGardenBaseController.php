@@ -101,30 +101,28 @@ class PiGardenBaseController extends Controller
                 }
                 $weather->weather = $this->transPiGarden($status->last_weather_online->weather);
                 // Le icone meteo arrivano dal driver con URL in http:// e in due
-                // forme diverse (icons.wxug.com e www.wunderground.com/static):
-                // entrambe puntano allo stesso set di GIF ormai dismesso. Si
-                // riscrivono sull'endpoint SVG attuale, protocol-relative.
+                // forme storiche (icons.wxug.com e www.wunderground.com/static).
                 //
-                // Non e' solo estetica: servita in http:// dentro una pagina
-                // https:// l'icona viene bloccata dal browser come mixed content
-                // e sparisce senza errori visibili.
+                // Servite in http:// dentro una pagina https:// verrebbero
+                // bloccate dal browser come mixed content e sparirebbero senza
+                // errori visibili, quindi vanno normalizzate.
+                //
+                // Si normalizza su www.wunderground.com in https, VERIFICATO
+                // funzionante (200, image/gif). NON su icons.wxug.com: quel
+                // nome risolve ancora ma non risponde piu' in TLS, quindi
+                // l'endpoint SVG a cui puntava il codice precedente e' morto.
+                $iconUrl = $status->last_weather_online->icon_url;
                 $legacyIconPrefixes = [
                     'http://icons.wxug.com/i/c/k/',
                     'http://www.wunderground.com/static/i/c/k/',
                 ];
-                $iconUrl = $status->last_weather_online->icon_url;
-                $isLegacyIcon = false;
+                $weather->icon_url = $iconUrl;
                 foreach ($legacyIconPrefixes as $prefix) {
                     if ($iconUrl && 0 === strpos($iconUrl, $prefix)) {
-                        $isLegacyIcon = true;
+                        $i = pathinfo($iconUrl);
+                        $weather->icon_url = 'https://www.wunderground.com/static/i/c/k/'.$i['filename'].'.gif';
                         break;
                     }
-                }
-                if ($isLegacyIcon) {
-                    $i = pathinfo($iconUrl);
-                    $weather->icon_url = '//icons.wxug.com/i/c/v1/'.$i['filename'].'.svg';
-                } else {
-                    $weather->icon_url = $iconUrl;
                 }
                 $weather->temp_c = $status->last_weather_online->temp_c;
                 $weather->feelslike_c = $status->last_weather_online->feelslike_c;
