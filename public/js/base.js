@@ -156,11 +156,25 @@ function callBackAjaxError(jqXHR, textStatus, errorThrown){
 
 (function($){
     $(document).ready(function(){
+        // Nested dropdown submenus ("Avvia subito / fra X" -> durata).
+        // Bootstrap 4 / CoreUI (Backpack 6) shows a menu via the `.show` class,
+        // not BS3's `.open`: the old handler toggled `.open` on the <li>, for
+        // which no CSS rule exists, so clicking a submenu parent did nothing.
+        // Toggle `.show` on the child .dropdown-menu instead (app.css already
+        // has `.dropdown-menu.show{display:block}`; pigarden.css positions it).
         $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
             event.preventDefault();
             event.stopPropagation();
-            $(this).parent().siblings().removeClass('open');
-            $(this).parent().toggleClass('open');
+            var $submenu = $(this).next('.dropdown-menu');
+            // collapse any sibling submenu open at this level
+            $(this).closest('.dropdown-menu')
+                   .find('.dropdown-menu.show').not($submenu).removeClass('show');
+            $submenu.toggleClass('show');
+        });
+        // When the outer dropdown closes, reset the expanded submenu so it does
+        // not reappear pre-opened next time.
+        $('.dropdown').on('hidden.bs.dropdown', function () {
+            $(this).find('.dropdown-menu .dropdown-menu.show').removeClass('show');
         });
     });
 })(jQuery);
