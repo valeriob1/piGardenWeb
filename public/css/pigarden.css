@@ -429,6 +429,43 @@ ul.cron-item-text li.dow{
 .dropdown-submenu:hover>a:after{border-left-color:#555;}
 .dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
 
+/* Zone "start in..." menu on phones: the durations submenu flies out to the
+   right (left:100%) and ends up off-screen. Open it inline under the chosen
+   start time instead, as a compact grid, and let the menu scroll. */
+@media (max-width: 767.98px) {
+    .zone-dropdown {
+        width: min(300px, calc(100vw - 32px));
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .zone-dropdown .dropdown-submenu>.dropdown-menu {
+        position: static;
+        float: none;
+        margin: 0;
+        padding: .25rem .5rem .5rem;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background-color: #f0f3f5;
+    }
+    .zone-dropdown .dropdown-submenu>.dropdown-menu.show {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: .25rem;
+    }
+    .zone-dropdown .dropdown-submenu>.dropdown-menu .dropdown-item {
+        padding: .5rem .25rem;
+        text-align: center;
+        white-space: nowrap;
+        background-color: #fff;
+        border-radius: 4px;
+    }
+    /* caret points down while the durations are open */
+    .zone-dropdown .dropdown-submenu:has(>.dropdown-menu.show)>a:after {
+        transform: rotate(90deg);
+    }
+}
+
 @media (max-width: 768px) {
     .dropdown-menu.dropdown-menu-close-all {
         width:250px;

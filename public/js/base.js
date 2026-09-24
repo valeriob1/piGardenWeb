@@ -170,6 +170,11 @@ function callBackAjaxError(jqXHR, textStatus, errorThrown){
             $(this).closest('.dropdown-menu')
                    .find('.dropdown-menu.show').not($submenu).removeClass('show');
             $submenu.toggleClass('show');
+            // on phones the durations open inline inside a scrolling menu:
+            // bring them into view if they landed below the fold
+            if ($submenu.hasClass('show') && $submenu[0].scrollIntoView) {
+                $submenu[0].scrollIntoView({ block: 'nearest' });
+            }
         });
         // When the outer dropdown closes, reset the expanded submenu so it does
         // not reappear pre-opened next time.
