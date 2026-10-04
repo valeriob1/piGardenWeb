@@ -1,6 +1,29 @@
 <?php
 
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogUdpHandler;
+
+// Remote syslog (e.g. VictoriaLogs). Off unless LOG_SYSLOG_HOST is set; the
+// host must be an IP address (Monolog's UdpSocket does not resolve names).
+// Needs the PHP "sockets" extension (installed by the Dockerfile).
+$syslogHost = (string) env('LOG_SYSLOG_HOST', '');
+$syslogChannel = fn (string $ident) => [
+    'driver' => 'monolog',
+    'handler' => SyslogUdpHandler::class,
+    'with' => [
+        'host' => $syslogHost,
+        'port' => (int) env('LOG_SYSLOG_PORT', 514),
+        'ident' => $ident,
+    ],
+    // the syslog header already carries time, host and severity
+    'formatter' => LineFormatter::class,
+    'formatter_with' => [
+        'format' => '%message% %context% %extra%',
+        'ignoreEmptyContextAndExtra' => true,
+    ],
+    'level' => env('LOG_SYSLOG_LEVEL', 'debug'),
+];
 
 return [
 
@@ -33,9 +56,16 @@ return [
     */
 
     'channels' => [
+        // LOG_STACK lists the local channels (comma separated); the remote
+        // syslog joins them when LOG_SYSLOG_HOST is set. ignore_exceptions:
+        // a broken remote must never take the local logs down with it.
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => array_values(array_filter(array_merge(
+                array_map('trim', explode(',', (string) env('LOG_STACK', 'single'))),
+                $syslogHost !== '' ? ['syslog_remote'] : []
+            ))),
+            'ignore_exceptions' => true,
         ],
 
         'single' => [
@@ -76,6 +106,12 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        // piGardenWeb's own logs
+        'syslog_remote' => $syslogChannel('pigardenweb'),
+
+        // log lines piGarden posts to /api/log (App\Logging\SyslogForwarder)
+        'pigarden_remote' => $syslogChannel('pigarden'),
     ],
 
 ];

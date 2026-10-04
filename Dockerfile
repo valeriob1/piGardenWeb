@@ -6,6 +6,7 @@ FROM php:8.3-apache
 # --- System libraries + PHP extensions required by Laravel 11 + Backpack ---
 # gd: image/icon handling + dompdf | zip: elfinder/backpack | pdo_sqlite: database
 # intl/mbstring/exif/bcmath: framework + packages | opcache: performance
+# sockets: remote syslog (Monolog SyslogUdpHandler, LOG_SYSLOG_HOST)
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
         libzip-dev libicu-dev libonig-dev \
@@ -13,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" \
-        gd zip pdo_sqlite intl mbstring exif bcmath opcache \
+        gd zip pdo_sqlite intl mbstring exif bcmath opcache sockets \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Apache: serve Laravel's public/ and allow .htaccess rewrites ---

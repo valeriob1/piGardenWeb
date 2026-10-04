@@ -46,6 +46,15 @@ Edit **`docker-compose.yml`** and set at least:
 | `PIGARDEN_SOCKET_CLIENT_PORT` | `8084` (or your port) |
 | `PIGARDEN_SOCKET_CLIENT_USER` / `_PWD` | must match `TCPSERVER_USER`/`_PWD` on the Pi |
 | `TIMEZONE` / `PIGARDEN_TZ` | your timezone |
+| `LOG_SYSLOG_HOST` | optional: IP of a syslog server (e.g. VictoriaLogs) |
+
+**Remote syslog (optional).** With `LOG_SYSLOG_HOST` set (an IP address, not a
+name) the panel also sends its logs over UDP to that server, port
+`LOG_SYSLOG_PORT` (default `514`), in RFC 5424 format: its own logs with ident
+`pigardenweb`, and every log line piGarden posts to `/api/log` with ident
+`pigarden` and piGarden's level (info / warning / error). The database copy
+shown on the log page is kept as before. Empty = off. Any firewall between the
+container and the server must allow UDP to that port.
 
 ## 3. Build & start (on the NAS)
 
@@ -73,6 +82,7 @@ code + vendor), so the cleanest Portainer method is a **Git-repository stack**:
    | `APP_URL` | `http://<nas-ip>:8080` |
    | `WEB_PORT` | `8080` |
    | `TZ` | `Europe/Rome` |
+   | `LOG_SYSLOG_HOST` | `192.168.1.60` (optional, see above) |
 
 4. **Deploy the stack.** Portainer clones, builds the image and starts it. Use
    **"Pull and redeploy"** later to update after you push new commits.

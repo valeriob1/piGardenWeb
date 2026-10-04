@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Logging\SyslogForwarder;
 use App\Models\Log;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,8 @@ class ApiController extends Controller
             'username' => $request->user()->email,
             'client_ip' => $request->getClientIp(),
         ]);
+
+        SyslogForwarder::forward($log->type, $log->level, $log->message);
 
         // Keep the table bounded: drop everything older than the newest
         // PIGARDEN_MAX_RECORD_LOG rows (0 disables the trimming).

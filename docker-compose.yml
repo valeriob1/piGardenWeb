@@ -23,7 +23,13 @@ services:
       # terminates HTTPS is invisible to Laravel: the page is served over https
       # but its assets and AJAX URLs come out as http:// and get blocked.
       TRUSTED_PROXIES: "${TRUSTED_PROXIES:-}"
-      LOG_CHANNEL: stderr
+      # Logs go to the container's stderr (docker logs) and, when
+      # LOG_SYSLOG_HOST is set, also to a remote syslog over UDP (e.g.
+      # VictoriaLogs), together with the log lines piGarden posts to /api/log.
+      LOG_CHANNEL: stack
+      LOG_STACK: stderr
+      LOG_SYSLOG_HOST: "${LOG_SYSLOG_HOST:-}"
+      LOG_SYSLOG_PORT: "${LOG_SYSLOG_PORT:-514}"
 
       # ---- Connection to piGarden running on the Raspberry Pi ----
       PIGARDEN_SOCKET_CLIENT_IP: "${PIGARDEN_SOCKET_CLIENT_IP:-192.168.1.50}"
