@@ -1,6 +1,12 @@
 services:
   web:
-    build: .
+    build:
+      context: .
+      # Always fetch the current php:8.3-apache base when building. Without this a
+      # redeploy reuses the cached base and keeps an old PHP: on 23/10/2026 the
+      # image still had 8.3.35, vulnerable to PHP2Shell (CVE-2026-109618/-109619),
+      # with the fixed 8.3.36 already published.
+      pull: true
     container_name: pigardenweb
     restart: unless-stopped
     ports:
