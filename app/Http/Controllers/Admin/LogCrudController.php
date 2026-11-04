@@ -19,7 +19,7 @@ class LogCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\Log');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/log');
-        $this->crud->setEntityNameStrings('log', 'logs');
+        $this->crud->setEntityNameStrings(trans('pigarden.log.singular'), trans('pigarden.log.plural'));
     }
 
     protected function setupListOperation()

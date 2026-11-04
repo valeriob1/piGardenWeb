@@ -39,13 +39,13 @@
 @endsection
 
 @section('header')
-    <section class="content-header">
-      <h1>
+    <section class="container-fluid d-flex flex-wrap align-items-baseline justify-content-between mb-2 d-print-none">
+      <h1 class="mb-0 mr-3">
         {{ trans('backpack::crud.file_manager') }}
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ url(config('backpack.base.route_prefix')) }}">Admin</a></li>
-        <li class="active">{{ trans('backpack::crud.file_manager') }}</li>
+      <ol class="breadcrumb bg-transparent p-0 mb-0 d-none d-lg-flex">
+        <li class="breadcrumb-item"><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ trans('backpack::crud.file_manager') }}</li>
       </ol>
     </section>
 @endsection

@@ -202,15 +202,21 @@ return array(
     'enabled' => 'Enabled',
 
     'icon' => [
+        'singular' => 'icon',
+        'plural' => 'icons',
+        'zones_unavailable' => 'the zone list is not available',
         'open' => 'Open icon',
         'close' => 'Close icon',
         'browse' => 'Browse',
     ],
 
     'log' => [
+        'singular' => 'log',
+        'plural' => 'logs',
         'title' => "View the log"
     ],
 
+    'users_roles_permissions' => 'Users & permissions',
     'error_connection_title' => 'Cannot reach piGarden',
     'error_connection_description' => 'The piGarden service at :target is not responding, so zone status cannot be read and irrigation cannot be controlled.',
     'error_connection_hints' => [
