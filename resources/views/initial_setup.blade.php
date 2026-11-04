@@ -3,13 +3,13 @@
 @section('body_class', 'initial-setup')
 
 @section('header')
-    <section class="content-header">
-      <h1>
-        {{ trans('pigarden.initial_setup.title') }}<small></small>
+    <section class="container-fluid d-flex flex-wrap align-items-baseline justify-content-between mb-2 d-print-none">
+      <h1 class="mb-0 mr-3">
+        {{ trans('pigarden.initial_setup.title') }}
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ url('admin') }}">{{ config('backpack.base.project_name') }}</a></li>
-        <li class="active">{{ trans('pigarden.initial_setup.title') }}</li>
+      <ol class="breadcrumb bg-transparent p-0 mb-0 d-none d-lg-flex">
+        <li class="breadcrumb-item"><a href="{{ url('admin') }}">{{ config('backpack.base.project_name') }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ trans('pigarden.initial_setup.title') }}</li>
       </ol>
     </section>
 @endsection

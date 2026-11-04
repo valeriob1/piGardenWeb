@@ -23,6 +23,7 @@ function updateDashboardOnce(urlAction, first=false)
         },
         success: function (data, textStatus, jqXHR) {
             //console.log(data);
+            updateErrorBox(data);
             updateDashboardExec(data);
             updateZones(data);
             updateDateTime(data);
@@ -64,14 +65,40 @@ function updateDashboard(urlAction, first=false)
         updateDashboard(urlAction);
     }, timeout);
 }
+/**
+ * Show/hide the "piGarden not reachable" box as the connection drops or
+ * comes back. When the page was rendered while piGarden was down, the zone
+ * cards were never drawn: reload once it is reachable again so they appear.
+ */
+function updateErrorBox(data){
+    if (!data || typeof data['error_html'] === 'undefined') {
+        return;
+    }
+    var $wrap = $('#pigarden-error-wrap');
+    if ($wrap.length === 0) {
+        return;
+    }
+    var hadError = $.trim($wrap.html()) !== '';
+    if (data['error_html']) {
+        // keep the technical details open if the user expanded them
+        var detailsOpen = $wrap.find('.collapse.show').length > 0;
+        $wrap.html(data['error_html']);
+        if (detailsOpen) {
+            $wrap.find('.collapse').addClass('show');
+        }
+    } else if (hadError) {
+        window.location.reload();
+    }
+}
+
 function updateDashboardExec(data){
     //console.log(typeof data);
 
     if (checkExitsElement(data, 'last_rain_sensor')){
-        updateElement('#last_rain_sensor', data['last_rain_sensor']);
+        updateElement('#last_rain_sensor', data['last_rain_sensor'] || '\u2014');
     }
     if (checkExitsElement(data, 'last_rain_online')){
-        updateElement('#last_rain_online', data['last_rain_online']);
+        updateElement('#last_rain_online', data['last_rain_online'] || '\u2014');
     }
     if (checkExitsElement(data, 'weather', 'observation_time')){
         updateElement('#observation_time', data['weather']['observation_time']);
