@@ -211,6 +211,17 @@ return array(
         'title' => "View the log"
     ],
 
-
+    'error_connection_title' => 'Cannot reach piGarden',
+    'error_connection_description' => 'The piGarden service at :target is not responding, so zone status cannot be read and irrigation cannot be controlled.',
+    'error_connection_hints' => [
+        'Check that the Raspberry Pi running piGarden is powered on and connected to the network.',
+        'Check that the piGarden socket server is running (piGarden.sh start_socket_server).',
+        'Check IP address and port (PIGARDEN_SOCKET_CLIENT_IP / PIGARDEN_SOCKET_CLIENT_PORT in the .env file).',
+    ],
+    'error_generic_title' => 'piGarden reported an error',
+    'error_retry' => 'Retry',
+    'error_details' => 'Technical details',
+    'error_what_to_check' => 'What to check',
+    'zones_unavailable' => 'Zones unavailable',
 
 );

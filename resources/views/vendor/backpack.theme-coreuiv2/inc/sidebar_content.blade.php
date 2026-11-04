@@ -19,7 +19,13 @@
     </li>
 @empty
     <li class="nav-item">
-        <span class="nav-link disabled text-muted"><em>{{ trans('pigarden.zones_empty') }}</em></span>
+        @if(\App\Zones::$unavailable)
+            <a class="nav-link text-warning" href="{{ backpack_url('dashboard') }}" title="{{ trans('pigarden.error_connection_title') }}">
+                <i class="nav-icon fa fa-plug"></i> <em>{{ trans('pigarden.zones_unavailable') }}</em>
+            </a>
+        @else
+            <span class="nav-link disabled text-muted"><em>{{ trans('pigarden.zones_empty') }}</em></span>
+        @endif
     </li>
 @endforelse
 

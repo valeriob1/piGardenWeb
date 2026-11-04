@@ -8,12 +8,7 @@
 
 @section('content')
 
-    @if(!empty($error->description))
-        <div class="alert alert-danger">
-            <h5 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> piGarden</h5>
-            <div class="small mb-0">{{ $error->description }}</div>
-        </div>
-    @endif
+    @include('_partials.pigarden_error')
 
     {{-- Toolbar: clock on the left, global actions on the right --}}
     @if(!empty($zones) && $zones->count() > 0)
@@ -104,11 +99,11 @@
                 <div class="card-body py-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted small">{{ trans('pigarden.last_rain_sensor') }}</span>
-                        <strong id="last_rain_sensor">{{$last_rain_sensor}}</strong>
+                        <strong id="last_rain_sensor">{{ $last_rain_sensor ?: "—" }}</strong>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="text-muted small">{{ trans('pigarden.last_rain_online') }}</span>
-                        <strong id="last_rain_online">{{$last_rain_online}}</strong>
+                        <strong id="last_rain_online">{{ $last_rain_online ?: "—" }}</strong>
                     </div>
                 </div>
             </div>

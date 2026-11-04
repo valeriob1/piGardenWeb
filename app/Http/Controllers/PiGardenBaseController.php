@@ -186,6 +186,37 @@ class PiGardenBaseController extends Controller
     }
 
     /**
+     * Build a user friendly error from an exception.
+     *
+     * description: short, translated sentence shown to the user
+     * title:       heading of the alert
+     * hints:       list of things the user can check
+     * detail:      raw technical message (file/line), shown collapsed
+     *
+     * @param \Throwable $e
+     * @return \stdClass
+     */
+    protected function makeErrorFromException(\Throwable $e)
+    {
+        $error = $this->makeError($e->getMessage(), $e->getCode());
+        $error->detail = $e->getMessage().' ('.basename($e->getFile()).':'.$e->getLine().')';
+        $error->hints = [];
+
+        if ($e instanceof \App\PiGardenConnectionException) {
+            $error->type = 'connection';
+            $error->title = trans('pigarden.error_connection_title');
+            $error->description = trans('pigarden.error_connection_description', ['target' => $e->getTarget()]);
+            $error->hints = trans('pigarden.error_connection_hints');
+        } else {
+            $error->type = 'generic';
+            $error->title = trans('pigarden.error_generic_title');
+            $error->description = $this->transPiGarden($e->getMessage());
+        }
+
+        return $error;
+    }
+
+    /**
      * Set alert messages from status
      * @param $status
      * @param bool $setFlash set messages in flesh session
@@ -250,7 +281,7 @@ class PiGardenBaseController extends Controller
             $status = $client->getStatus($arr_extra_parameter);
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status);

@@ -37,7 +37,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $this->setDataFromStatus($status);
             $this->setMessagesFromStatus($status);
         } catch (\Exception $e) {
-            $this->data['error'] = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $this->data['error'] = $this->makeErrorFromException($e);
         }
         $this->data['title'] = trans('pigarden.dashboard'); // set the page title
 
@@ -63,7 +63,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneOpen($zone, $force === 'force');
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -100,7 +100,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneOpenIn($zone, $start, $length, $force === 'force');
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -124,7 +124,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneOpenInCancel($zone);
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -149,7 +149,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneClose($zone);
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -247,7 +247,7 @@ class PiGardenAdminController extends PiGardenBaseController
 
         } catch (\Exception $e) {
             $zoneData = null;
-            $this->data['error'] = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $this->data['error'] = $this->makeErrorFromException($e);
         }
 
         $this->data['zone'] = $zoneData;
@@ -374,7 +374,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $this->setMessagesFromStatus($status);
         } catch (\Exception $e) {
             $zoneData = null;
-            $this->data['error'] = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $this->data['error'] = $this->makeErrorFromException($e);
         }
         $this->data['title'] = trans('pigarden.initial_setup.title'); // set the page title
 
@@ -422,7 +422,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneCloseAll(!empty($disable_scheduling));
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -446,7 +446,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->zoneAllCronEnable();
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -471,7 +471,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->reboot();
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
@@ -494,7 +494,7 @@ class PiGardenAdminController extends PiGardenBaseController
             $status = $client->poweroff();
         } catch (\Exception $e) {
             $status = new \stdClass();
-            $status->error = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
         $this->setMessagesFromStatus($status, !$request->ajax());
