@@ -26,12 +26,7 @@
 
 @section('content')
 
-    @if(!empty($error->description))
-    <div class="alert alert-danger">
-        <h4>PiGarden server error</h4>
-        <pre><?php print_r($error) ?></pre>
-    </div>
-    @endif
+    @include('_partials.pigarden_error')
 
     @include('_partials.errors')
 

@@ -209,5 +209,17 @@ return array(
         'title' => "Mostra i log"
     ],
 
+    'error_connection_title' => 'Impossibile contattare piGarden',
+    'error_connection_description' => 'Il servizio piGarden all\'indirizzo :target non risponde, quindi non è possibile leggere lo stato delle zone né comandare l\'irrigazione.',
+    'error_connection_hints' => [
+        'Verifica che il Raspberry Pi con piGarden sia acceso e collegato alla rete.',
+        'Verifica che il socket server di piGarden sia avviato (piGarden.sh start_socket_server).',
+        'Controlla indirizzo IP e porta (PIGARDEN_SOCKET_CLIENT_IP / PIGARDEN_SOCKET_CLIENT_PORT nel file .env).',
+    ],
+    'error_generic_title' => 'piGarden ha segnalato un errore',
+    'error_retry' => 'Riprova',
+    'error_details' => 'Dettagli tecnici',
+    'error_what_to_check' => 'Cosa controllare',
+    'zones_unavailable' => 'Zone non disponibili',
 
 );

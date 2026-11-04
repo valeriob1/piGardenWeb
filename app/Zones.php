@@ -15,8 +15,16 @@ class Zones {
 
     protected static $zones = null;
 
+    /**
+     * True when the last get() could not reach piGarden, so the UI can tell
+     * "no zones configured" apart from "piGarden not reachable".
+     * @var bool
+     */
+    public static $unavailable = false;
+
     public static function get()
     {
+        self::$unavailable = false;
         try
         {
             self::$zones = array();
@@ -37,6 +45,7 @@ class Zones {
             // NB: don't use \Debugbar here: it's a dev-only dependency and this
             // catch runs in production exactly when the socket server is unreachable
             self::$zones = array();
+            self::$unavailable = true;
             Log::warning('Zones::get failed: '.$e->getMessage());
         }
 

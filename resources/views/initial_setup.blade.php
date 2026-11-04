@@ -24,10 +24,7 @@
 @section('content')
 
     @if(!empty($error->description))
-    <div class="callout callout-danger lead">
-        <h4>PiGarden server error</h4>
-        <pre><?php print_r($error) ?></pre>
-    </div>
+        @include('_partials.pigarden_error')
     @else
         @include('_partials.errors')
 

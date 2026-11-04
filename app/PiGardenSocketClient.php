@@ -43,7 +43,7 @@ class PiGardenSocketClient {
         $target = $this->ip.':'.$this->port;
 
         if (static::$unreachableTarget === $target) {
-            throw new Exception("piGarden is unreachable at {$target}");
+            throw new PiGardenConnectionException("piGarden is unreachable at {$target}", 0, $target);
         }
 
         $connectTimeout = (float) config('pigarden.socket_client_connect_timeout', 5);
@@ -52,7 +52,7 @@ class PiGardenSocketClient {
         if (!$this->socket) {
             // Remember it for the rest of the request so sibling calls fail instantly
             static::$unreachableTarget = $target;
-            throw new Exception($errstr, $errno);
+            throw new PiGardenConnectionException($errstr ?: 'Connection failed', $errno, $target);
         }
 
         // Timeout on read/write: without it a stalled socket server hangs the web request forever

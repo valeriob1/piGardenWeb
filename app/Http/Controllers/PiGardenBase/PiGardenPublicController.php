@@ -28,7 +28,7 @@ class PiGardenPublicController extends PiGardenBaseController {
             $this->setDataFromStatus($status);
             $this->setMessagesFromStatus($status);
         } catch (\Exception $e) {
-            $this->data['error'] = $this->makeError($e->getMessage().' at line '.$e->getLine().' of file '.$e->getFile(), $e->getCode());
+            $this->data['error'] = $this->makeErrorFromException($e);
         }
         $this->data['title'] = trans('pigarden.home'); // set the page title
         return view('home', $this->data);
