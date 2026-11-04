@@ -11,9 +11,11 @@
                 </h5>
                 <div>{{ $error->description }}</div>
             </div>
-            <a href="{{ url()->current() }}" class="btn btn-light btn-sm mb-2">
+            {{-- reload via JS: this partial is also rendered inside the JSON
+                 status response, where url()->current() is the JSON endpoint --}}
+            <button type="button" class="btn btn-light btn-sm mb-2" onclick="window.location.reload()">
                 <i class="fa fa-refresh"></i> {{ trans('pigarden.error_retry') }}
-            </a>
+            </button>
         </div>
 
         @if(!empty($error->hints))
@@ -31,7 +33,7 @@
                 <i class="fa fa-caret-right"></i> {{ trans('pigarden.error_details') }}
             </a>
             <div class="collapse" id="{{ $errId }}">
-                <code class="d-block small mt-1 text-danger">{{ $error->detail }}</code>
+                <code class="d-block small mt-1 p-2 rounded bg-white text-dark">{{ $error->detail }}</code>
             </div>
         @endif
     </div>

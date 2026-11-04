@@ -284,7 +284,17 @@ class PiGardenBaseController extends Controller
             $status->error = $this->makeErrorFromException($e);
         }
         $this->setDataFromStatus($status);
-        $this->setMessagesFromStatus($status);
+
+        if (!empty($this->data['error']->description)) {
+            // The dashboard shows the error in its own box (re-rendered here so
+            // it appears/disappears as piGarden goes down/comes back). Don't
+            // also raise a toast: it would pop up again on every poll.
+            $this->data['messages'] = [];
+            $this->data['error_html'] = view('_partials.pigarden_error', ['error' => $this->data['error']])->render();
+        } else {
+            $this->setMessagesFromStatus($status);
+            $this->data['error_html'] = '';
+        }
 
         return json_encode($this->data);
     }

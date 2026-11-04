@@ -8,7 +8,7 @@
 
 @section('content')
 
-    @include('_partials.pigarden_error')
+    <div id="pigarden-error-wrap">@include('_partials.pigarden_error')</div>
 
     {{-- Toolbar: clock on the left, global actions on the right --}}
     @if(!empty($zones) && $zones->count() > 0)

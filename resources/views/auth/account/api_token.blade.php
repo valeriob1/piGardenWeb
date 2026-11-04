@@ -10,23 +10,23 @@
 @endsection
 
 @section('header')
-<section class="content-header">
+<section class="container-fluid d-flex flex-wrap align-items-baseline justify-content-between mb-2 d-print-none">
 
-    <h1>
+    <h1 class="mb-0 mr-3">
         {{ trans('backpack::base.my_account') }}
     </h1>
 
-    <ol class="breadcrumb">
+    <ol class="breadcrumb bg-transparent p-0 mb-0 d-none d-lg-flex">
 
-        <li>
+        <li class="breadcrumb-item">
             <a href="{{ backpack_url() }}">{{ config('backpack.base.project_name') }}</a>
         </li>
 
-        <li>
+        <li class="breadcrumb-item">
             <a href="{{ route('backpack.account.info') }}">{{ trans('backpack::base.my_account') }}</a>
         </li>
 
-        <li class="active">
+        <li class="breadcrumb-item active" aria-current="page">
             {{ trans('backpack::base.update_account_info') }}
         </li>
 
