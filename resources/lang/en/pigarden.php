@@ -211,6 +211,12 @@ return array(
     ],
 
     'log' => [
+        'filter_all' => 'All',
+        'filter_from' => 'From',
+        'filter_to' => 'To',
+        'filter_apply' => 'Filter',
+        'filter_reset' => 'Clear filters',
+        'filter_active' => ':count active filter|:count active filters',
         'singular' => 'log',
         'plural' => 'logs',
         'title' => "View the log"

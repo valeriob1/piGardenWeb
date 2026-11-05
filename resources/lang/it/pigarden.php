@@ -209,6 +209,12 @@ return array(
     ],
 
     'log' => [
+        'filter_all' => 'Tutti',
+        'filter_from' => 'Dal',
+        'filter_to' => 'Al',
+        'filter_apply' => 'Filtra',
+        'filter_reset' => 'Azzera filtri',
+        'filter_active' => ':count filtro attivo|:count filtri attivi',
         'singular' => 'log',
         'plural' => 'log',
         'title' => "Mostra i log"

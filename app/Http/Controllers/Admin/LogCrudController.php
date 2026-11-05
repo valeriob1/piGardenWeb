@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Log;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\Widget;
+use Carbon\Carbon;
 
 /**
  * Class LogCrudController
@@ -39,10 +41,23 @@ class LogCrudController extends CrudController
         // 'priority' decides what stays visible: date and message first.
         $this->crud->enableResponsiveTable();
 
-        // NOTE: filters (date_range + select2_multiple on type/level/client_ip) were
-        // removed here during the Backpack 4 -> 5 upgrade: Backpack 5 moved list
-        // filters to the paid "Pro" package. The log list still works (ordering,
-        // pagination); restore filters by adding backpack/pro or reimplementing them.
+        // Filters: Backpack's list filters are part of the paid "Pro" package, so
+        // they are reimplemented here as a plain GET form (see log/filters view).
+        // The datatable copies the page query string into its /search ajax URL,
+        // so the same request parameters reach this method on every reload.
+        // Backpack 6 enables "persistent table" by default: opening /admin/log
+        // redirected back to the last filtered URL, so "Clear filters" did
+        // nothing and an old filter could silently hide new log lines.
+        $this->crud->disablePersistentTable();
+        $this->applyFilters();
+        Widget::add([
+            'type' => 'view',
+            'view' => 'log.filters',
+            'section' => 'before_content',
+            'filters' => $this->currentFilters(),
+            'types' => $this->distinctValues('type'),
+            'levels' => $this->distinctValues('level'),
+        ]);
 
         // Backpack always keeps the first column visible (it hosts the "+" that
         // opens the hidden fields), so the message goes first. The "Follow Log"
@@ -83,6 +98,69 @@ class LogCrudController extends CrudController
             ],
         ]);
 
+    }
+
+    /**
+     * Filter values from the query string, normalised: unknown dates are dropped.
+     *
+     * @return array{type: string, level: string, from: string, to: string}
+     */
+    protected function currentFilters()
+    {
+        $request = request();
+        $date = function ($key) use ($request) {
+            $value = (string) $request->query($key, '');
+            if ($value === '') {
+                return '';
+            }
+            try {
+                return Carbon::createFromFormat('Y-m-d', $value)->format('Y-m-d');
+            } catch (\Exception $e) {
+                return '';
+            }
+        };
+
+        return [
+            'type' => (string) $request->query('filter_type', ''),
+            'level' => (string) $request->query('filter_level', ''),
+            'from' => $date('filter_from'),
+            'to' => $date('filter_to'),
+        ];
+    }
+
+    protected function applyFilters()
+    {
+        $f = $this->currentFilters();
+
+        if ($f['type'] !== '') {
+            $this->crud->addClause('where', 'type', $f['type']);
+        }
+        if ($f['level'] !== '') {
+            $this->crud->addClause('where', 'level', $f['level']);
+        }
+        if ($f['from'] !== '') {
+            $this->crud->addClause('where', 'datetime_log', '>=', $f['from'].' 00:00:00');
+        }
+        if ($f['to'] !== '') {
+            $this->crud->addClause('where', 'datetime_log', '<=', $f['to'].' 23:59:59');
+        }
+    }
+
+    /**
+     * Values present in the table for a column, for the filter dropdowns.
+     *
+     * @param string $column
+     * @return array
+     */
+    protected function distinctValues($column)
+    {
+        return Log::query()
+            ->whereNotNull($column)
+            ->where($column, '!=', '')
+            ->distinct()
+            ->orderBy($column)
+            ->pluck($column)
+            ->all();
     }
 
 }
