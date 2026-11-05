@@ -29,6 +29,12 @@ WORKDIR /var/www/html
 # --- Application code (vendor/ included; .dockerignore trims dev-only files) ---
 COPY . /var/www/html
 
+# Copy the file manager (elFinder) assets from vendor/ into public/packages.
+# They were never republished after a package update and stayed at 2.1.48,
+# which breaks with the jQuery shipped by Backpack 6 (files rendered nested,
+# empty folder tree). Doing it at build time keeps them in step with vendor/.
+RUN php artisan elfinder:publish
+
 # Writable dirs for Laravel (volumes may override storage/ at runtime; the
 # entrypoint recreates the skeleton if the mounted volume is empty)
 RUN chown -R www-data:www-data storage bootstrap/cache \
