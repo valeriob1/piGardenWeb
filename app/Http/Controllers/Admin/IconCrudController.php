@@ -24,7 +24,7 @@ class IconCrudController extends CrudController
     {
         $this->crud->setModel('App\Models\Icon');
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/icon');
-        $this->crud->setEntityNameStrings('icon', 'icons');
+        $this->crud->setEntityNameStrings(trans('pigarden.icon.singular'), trans('pigarden.icon.plural'));
 
         if (!backpack_user()->hasPermissionTo('manage setup', backpack_guard_name())) {
             $this->crud->denyAccess(['list', 'create', 'update', 'delete', 'show']);
@@ -75,7 +75,11 @@ class IconCrudController extends CrudController
                 $aliases[$z->name] = $z->name;
             }
         } catch (\Exception $e) {
-            Alert::error($e->getMessage())->flash();
+            Alert::error($e instanceof \App\PiGardenConnectionException
+                ? trans('pigarden.error_connection_title').': '.trans('pigarden.icon.zones_unavailable')
+                : $e->getMessage());
+            // no ->flash(): this runs while rendering the form, so a flashed
+            // alert was shown here AND again on the next page
         }
 
         $this->crud->addFields([
@@ -103,6 +107,13 @@ class IconCrudController extends CrudController
                 'type' => 'browse',
             ],
         ]);
+    }
+
+    protected function setupShowOperation()
+    {
+        // Without this Backpack guesses the columns from the table, showing raw
+        // English db names ("Icon open", "Enabled: 1") instead of the list labels
+        $this->setupListOperation();
     }
 
     protected function setupUpdateOperation()

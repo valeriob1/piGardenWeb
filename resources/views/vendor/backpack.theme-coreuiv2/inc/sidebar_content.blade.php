@@ -63,12 +63,12 @@
 )
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#">
-        <i class="nav-icon fa fa-group"></i> Users, Roles, Perm
+        <i class="nav-icon fa fa-group"></i> {{ trans('pigarden.users_roles_permissions') }}
     </a>
     <ul class="nav-dropdown-items">
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('user') }}">
-                <i class="nav-icon fa fa-user"></i> Users
+                <i class="nav-icon fa fa-user"></i> {{ trans('backpack::permissionmanager.users') }}
             </a>
         </li>
         @if(
@@ -78,7 +78,7 @@
         )
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('role') }}">
-                <i class="nav-icon fa fa-group"></i> Roles
+                <i class="nav-icon fa fa-group"></i> {{ trans('backpack::permissionmanager.roles') }}
             </a>
         </li>
         @endif
@@ -89,7 +89,7 @@
         )
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('permission') }}">
-                <i class="nav-icon fa fa-key"></i> Permissions
+                <i class="nav-icon fa fa-key"></i> {{ trans('backpack::permissionmanager.permission_plural') }}
             </a>
         </li>
         @endif

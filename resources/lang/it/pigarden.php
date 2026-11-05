@@ -200,15 +200,21 @@ return array(
     'enabled' => 'Abilitato',
 
     'icon' => [
+        'singular' => 'icona',
+        'plural' => 'icone',
+        'zones_unavailable' => "l'elenco delle zone non è disponibile",
         'open' => 'Icona aperto',
         'close' => 'Icona chiuso',
         'browse' => 'Sfoglia',
     ],
 
     'log' => [
+        'singular' => 'log',
+        'plural' => 'log',
         'title' => "Mostra i log"
     ],
 
+    'users_roles_permissions' => 'Utenti e permessi',
     'error_connection_title' => 'Impossibile contattare piGarden',
     'error_connection_description' => 'Il servizio piGarden all\'indirizzo :target non risponde, quindi non è possibile leggere lo stato delle zone né comandare l\'irrigazione.',
     'error_connection_hints' => [

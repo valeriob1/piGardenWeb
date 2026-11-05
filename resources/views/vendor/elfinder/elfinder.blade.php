@@ -1,14 +1,14 @@
 @extends(backpack_view('blank'))
 
 @section('after_scripts')
-    <!-- jQuery and jQuery UI (REQUIRED) -->
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> -->
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    {{-- jQuery UI (REQUIRED by elFinder), served locally: it was loaded from
+         ajax.googleapis.com, so the file manager broke whenever the box running
+         piGardenWeb had no internet access. jQuery itself comes from Backpack. --}}
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css') }}" />
+    <script src="{{ asset('vendor/adminlte/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 
     <!-- elFinder CSS (REQUIRED) -->
     <link rel="stylesheet" type="text/css" href="<?= asset($dir.'/css/elfinder.min.css') ?>">
-    <!-- <link rel="stylesheet" type="text/css" href="<?= asset($dir.'/css/theme.css') ?>"> -->
     <link rel="stylesheet" type="text/css" href="<?= asset('vendor/backpack/elfinder/elfinder.backpack.theme.css') ?>">
 
     <!-- elFinder JS (REQUIRED) -->
@@ -32,6 +32,17 @@
                 customData: {
                     _token: '<?= csrf_token() ?>'
                 },
+                // the Backpack theme is loaded above; without this elFinder also
+                // requests css/theme.css relative to the page (/admin/css/theme.css: 404)
+                cssAutoLoad: false,
+                // use the screen height instead of a fixed 400px box
+                height: Math.max(400, $(window).height() - 260),
+                uiOptions: {
+                    // on phones the folder tree took ~2/3 of the width: start
+                    // with it hidden (the toolbar button shows it again).
+                    // elFinder deep-merges this into its defaults.
+                    navbar: { autoHideUA: ['Mobile'] }
+                },
                 url : '<?= route("elfinder.connector") ?>'  // connector URL
             });
         });
@@ -39,13 +50,13 @@
 @endsection
 
 @section('header')
-    <section class="content-header">
-      <h1>
+    <section class="container-fluid d-flex flex-wrap align-items-baseline justify-content-between mb-2 d-print-none">
+      <h1 class="mb-0 mr-3">
         {{ trans('backpack::crud.file_manager') }}
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ url(config('backpack.base.route_prefix')) }}">Admin</a></li>
-        <li class="active">{{ trans('backpack::crud.file_manager') }}</li>
+      <ol class="breadcrumb bg-transparent p-0 mb-0 d-none d-lg-flex">
+        <li class="breadcrumb-item"><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ trans('backpack::crud.file_manager') }}</li>
       </ol>
     </section>
 @endsection

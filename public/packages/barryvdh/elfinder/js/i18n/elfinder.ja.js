@@ -2,7 +2,7 @@
  * Japanese translation
  * @author Tomoaki Yoshida <info@yoshida-studio.jp>
  * @author Naoki Sawada <hypweb+elfinder@gmail.com>
- * @version 2019-02-18
+ * @version 2026-04-29
  */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -17,9 +17,9 @@
 		translator : 'Tomoaki Yoshida &lt;info@yoshida-studio.jp&gt;, Naoki Sawada &lt;hypweb+elfinder@gmail.com&gt;',
 		language   : 'Japanese',
 		direction  : 'ltr',
-		dateFormat : 'Y/m/d h:i A', // will show like: 2018/08/24 04:37 PM
-		fancyDateFormat : '$1 h:i A', // will show like: 今日 04:37 PM
-		nonameDateFormat : 'ymd-His', // noname upload will show like: 180824-163717
+		dateFormat : 'Y/m/d h:i A', // will show like: 2026/04/29 11:30 PM
+		fancyDateFormat : '$1 h:i A', // will show like: 今日 11:30 PM
+		nonameDateFormat : 'ymd-His', // noname upload will show like: 260429-233058
 		messages   : {
 
 			/********************************** errors **********************************/
@@ -116,6 +116,7 @@
 			'errServerError'       : 'サーバー側でエラーが発生しました。', // from v2.1.25 added 16.6.2017
 			'errEmpty'             : 'フォルダ"$1"を空にすることができません。', // from v2.1.25 added 22.6.2017
 			'moreErrors'           : 'さらに $1 件のエラーがあります。', // from v2.1.44 added 9.12.2018
+			'errMaxMkdirs'         : '一度に作成できるフォルダーは $1 個までです。', // from v2.1.58 added 20.6.2021
 
 			/******************************* commands names ********************************/
 			'cmdarchive'   : 'アーカイブ作成',
@@ -174,6 +175,7 @@
 			'btnCancel' : 'キャンセル',
 			'btnNo'     : 'いいえ',
 			'btnYes'    : 'はい',
+			'btnDiscard': '変更を破棄',
 			'btnMount'  : 'マウント',  // added 18.04.2012
 			'btnApprove': '$1へ行き認可する', // from v2.1 added 26.04.2012
 			'btnUnmount': 'アンマウント', // from v2.1 added 30.04.2012
@@ -291,7 +293,7 @@
 			'untitled folder'   : '新規フォルダ',   // added 10.11.2015
 			'Archive'           : '新規アーカイブ',  // from v2.1 added 10.11.2015
 			'untitled file'     : '新規ファイル.$1',  // from v2.1.41 added 6.8.2018
-			'extentionfile'     : '$1: ファイル',     // from v2.1.41 added 6.8.2018
+			'extentionfile'     : '$1: ファイル',    // from v2.1.41 added 6.8.2018
 			'extentiontype'     : '$1: $2',      // from v2.1.43 added 17.10.2018
 
 			/********************************** messages **********************************/
@@ -303,6 +305,7 @@
 			'confirmNonUTF8'  : 'このファイルの文字エンコーディングを判別できませんでした。編集するには一時的に UTF-8 に変換する必要があります。<br/>文字エンコーディングを指定してください。', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'  : '変更されています。<br/>保存せずに閉じると編集内容が失われます。', // from v2.1 added 15.7.2015
 			'confirmTrash'    : 'アイテムをごみ箱に移動してもよろしいですか？', //from v2.1.24 added 29.4.2017
+			'confirmMove'     : 'アイテムを"$1"に移動してもよろしいですか？', //from v2.1.50 added 27.7.2019
 			'apllyAll'        : '全てに適用します',
 			'name'            : '名前',
 			'size'            : 'サイズ',
@@ -442,6 +445,7 @@
 			'clearBrowserData': 'ブラウザに保存された設定を初期化する', // from v2.1.26 added 28.6.2017
 			'toolbarPref'     : 'ツールバー設定', // from v2.1.27 added 2.8.2017
 			'charsLeft'       : '... 残り $1 文字',  // from v2.1.29 added 30.8.2017
+			'linesLeft'       : '... 残り $1 行',  // from v2.1.52 added 16.1.2020
 			'sum'             : '合計', // from v2.1.29 added 28.9.2017
 			'roughFileSize'   : '大まかなファイルサイズ', // from v2.1.30 added 2.11.2017
 			'autoFocusDialog' : 'マウスオーバーでダイアログの要素にフォーカスする',  // from v2.1.30 added 2.11.2017
@@ -520,6 +524,12 @@
 			'kindTTF'         : 'True Type フォント',
 			'kindOTF'         : 'Open Type フォント',
 			'kindRPM'         : 'RPM パッケージ',
+			// fonts
+			'kindFont'        : 'フォント',
+			'kindSFNT'        : 'SFNT フォント',
+			'kindEOT'         : 'Embedded Open Type フォント',
+			'kindWOFF'        : 'Web Open Font Format フォント',
+			'kindWOFF2'       : 'Web Open Font Format 2  フォント',
 			// texts
 			'kindText'        : 'Text ドキュメント',
 			'kindTextPlain'   : 'プレインテキスト',
@@ -554,6 +564,8 @@
 			'kindPSD'         : 'Adobe Photoshop イメージ',
 			'kindXBITMAP'     : 'X bitmap イメージ',
 			'kindPXM'         : 'Pixelmator イメージ',
+			'kindWEBP'        : 'WEBP イメージ',
+			'kindSVG'         : 'SVG イメージ',
 			// media
 			'kindAudio'       : 'オーディオメディア',
 			'kindAudioMPEG'   : 'MPEG オーディオ',
