@@ -34,6 +34,9 @@ services:
       default:
       macvlan_net:
         ipv4_address: ${MACVLAN_IP:-192.168.99.95}
+        # MAC fisso (26/11/2026): senza, ogni ricreazione ne genera uno nuovo e l'inventario
+        # dispositivi del FortiGate si riempie (home-dashboard ne aveva prodotti 685 in un mese).
+        mac_address: "${MACVLAN_MAC:-86:6a:15:55:24:4d}"
 
 networks:
   # Creata fuori dal compose e condivisa con gli altri stack: qui si dichiara
